@@ -24,4 +24,5 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npx webpack
+        run: npm run build
+
