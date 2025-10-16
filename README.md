@@ -69,3 +69,4 @@ npm run dev
 - Try-On Diffusion API by [Texel.Moda](https://texelmoda.com/)
 - UI components built with Tailwind CSS
 - Animations powered by Framer Motion
+- Dilan
