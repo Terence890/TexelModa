@@ -59,6 +59,32 @@ npm install
 npm run dev
 ```
 
+### Running the local Stripe server (checkout)
+
+This project ships a tiny Express server used to create Stripe Checkout sessions.
+
+1. Copy `.env.example` to `.env` and fill `STRIPE_SECRET_KEY` and `REACT_APP_STRIPE_PUBLISHABLE_KEY`.
+2. Install dependencies (if not already):
+
+```bash
+npm install
+```
+
+3. Start the server in a separate terminal:
+
+```bash
+npm run start:server
+```
+
+4. Start the frontend as usual:
+
+```bash
+npm run dev
+```
+
+The frontend will POST to `/api/stripe/create-checkout-session` on the same host. If you run the server on a different port, set `CLIENT_URL` in `.env` and edit the fetch URL in `src/components/ecommerce/CheckoutButton.jsx` accordingly.
+
+
 ## Environment Variables
 
 - `REACT_APP_API_URL`: The base URL for the Try-On API

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../context/CartContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { translate } from '../../utils/translate';
+import CheckoutButton from './CheckoutButton';
 
 const ShoppingCart = () => {
   const { currentLanguage } = useLanguage();
@@ -108,13 +109,11 @@ const ShoppingCart = () => {
                     </div>
                     <button
                       onClick={clearCart}
-                      className="w-full bg-primary-light hover:bg-primary-dark text-white py-2 px-4 rounded-md transition-colors"
+                      className="w-full bg-primary-light hover:bg-primary-dark text-white py-2 px-4 rounded-md transition-colors mb-2"
                     >
                       {translate('cart.continueShopping', currentLanguage) || 'Continue Shopping'}
                     </button>
-                    <button className="w-full bg-primary-light hover:bg-primary-dark text-white py-2 px-4 rounded-md transition-colors">
-                      {translate('cart.checkout', currentLanguage) || 'Checkout'}
-                    </button>
+                    <CheckoutButton items={cartItems} />
                   </div>
                 </>
               )}

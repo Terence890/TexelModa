@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "start:server": "node server/index.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -19,6 +20,12 @@
     "react-router-dom": "^7.6.0",
     "react-tsparticles": "^2.12.2",
     "tsparticles": "^3.8.1"
+  ,
+    "@stripe/stripe-js": "^2.1.0",
+    "express": "^4.18.2",
+    "stripe": "^12.13.0",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
