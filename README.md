@@ -90,6 +90,73 @@ The frontend will POST to `/api/stripe/create-checkout-session` on the same host
 - `REACT_APP_API_URL`: The base URL for the Try-On API
 - `REACT_APP_API_KEY`: API key for the Try-On Diffusion service
 
+## Stripe Checkout integration
+
+This project includes a minimal Express endpoint that creates Stripe Checkout sessions so you can complete purchases using Stripe's hosted Checkout page.
+
+Setup
+
+1. Copy `.env.example` to `.env` and set the following values:
+
+   - `STRIPE_SECRET_KEY` — your Stripe secret key (use test key for local testing)
+   - `REACT_APP_STRIPE_PUBLISHABLE_KEY` — your Stripe publishable key (optional for hosted Checkout flow)
+   - `CLIENT_URL` — the frontend URL, e.g. `http://localhost:5173`
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Start the Express server (separate terminal):
+
+```bash
+npm run start:server
+```
+
+4. Start the frontend:
+
+```bash
+npm run dev
+```
+
+By default the backend listens on port `4242`. The frontend `CheckoutButton` will POST to `/api/stripe/create-checkout-session` and redirect to the Stripe Checkout URL returned by the server.
+
+Testing the endpoint
+
+With the server running and your `STRIPE_SECRET_KEY` set to a test key you can POST a payload like this to create a test session:
+
+```json
+{
+  "items": [
+    { "name": "Blue Shirt", "price": 29.99, "quantity": 1, "image": "https://example.com/blue.png", "currency": "usd" }
+  ]
+}
+```
+
+Example curl (replace host if needed):
+
+```bash
+curl -X POST http://localhost:4242/api/stripe/create-checkout-session \
+  -H "Content-Type: application/json" \
+  -d '{"items":[{"name":"Blue Shirt","price":29.99,"quantity":1}]}'
+```
+
+If successful, the endpoint returns JSON containing a `url` you can open in the browser to view Stripe Checkout.
+
+Webhooks & production notes
+
+- For production use you should implement a webhook endpoint to receive `checkout.session.completed` events from Stripe and mark orders as paid on your server. Use the Stripe CLI or Dashboard to test webhooks locally.
+- Never commit `STRIPE_SECRET_KEY` to source control. Use environment variables and set the production secret in a secure place (CI/CD secrets, hosting environment variables, etc.).
+- Consider using pre-created Stripe Prices (and sending `price` IDs to the Checkout session) for stable product pricing instead of creating `price_data` on the fly.
+
+Security & troubleshooting
+
+- Add `.env` to `.gitignore` to ensure secrets are not committed.
+- If the frontend and server run on different origins, either enable CORS appropriately or configure a Vite proxy (see Vite docs) so the frontend can call the backend without CORS issues.
+- If you see errors when creating a session, check that `STRIPE_SECRET_KEY` is valid and that the server can reach Stripe's API.
+
+
 ## Credits
 
 - Try-On Diffusion API by [Texel.Moda](https://texelmoda.com/)
