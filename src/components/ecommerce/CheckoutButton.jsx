@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../../context/LanguageContext';
+import { useTheme } from '../../context/ThemeContext';
+import { translate } from '../../utils/translate';
+import { FaCreditCard, FaSpinner } from 'react-icons/fa';
+import apiClient from '../../utils/apiClient';
 
 const CheckoutButton = ({ items = [] }) => {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { currentLanguage } = useLanguage();
+  const { isDarkMode } = useTheme();
 
   const payloadItems = items.map((it) => ({
     name: it.name,
@@ -16,22 +25,25 @@ const CheckoutButton = ({ items = [] }) => {
     if (!items || items.length === 0) return;
     setLoading(true);
     try {
-      const res = await fetch('/api/stripe/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: payloadItems }),
+      const res = await apiClient.post('/stripe/create-checkout-session', {
+        items: payloadItems,
+        successUrl: `${window.location.origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancelUrl: `${window.location.origin}/checkout/cancel`
       });
 
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url; // redirect to hosted Stripe Checkout
+      if (res.data.url) {
+        window.location.href = res.data.url;
         return;
       }
 
-      alert('Unable to create checkout session');
+      throw new Error('No checkout URL received');
     } catch (err) {
-      console.error('Checkout error', err);
-      alert('Checkout failed. See console for details.');
+      // Error handling - could show a toast notification here
+      if (err.response?.data?.error) {
+        alert(err.response.data.error);
+      } else {
+        alert(translate('checkout.error', currentLanguage) || 'Unable to create checkout session. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -41,9 +53,25 @@ const CheckoutButton = ({ items = [] }) => {
     <button
       onClick={handleCheckout}
       disabled={loading || items.length === 0}
-      className={`w-full ${loading || items.length === 0 ? 'opacity-60 cursor-not-allowed' : ''} bg-primary-light hover:bg-primary-dark text-white py-2 px-4 rounded-md transition-colors`}
+      className={`w-full py-3.5 px-6 rounded-xl font-semibold transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center space-x-2 ${
+        loading || items.length === 0
+          ? 'opacity-60 cursor-not-allowed bg-gray-400'
+          : isDarkMode
+          ? 'bg-gradient-to-r from-primary-dark to-primary-light hover:from-primary-light hover:to-primary-dark text-white'
+          : 'bg-gradient-to-r from-primary-light to-primary-dark hover:from-primary-dark hover:to-primary-light text-white'
+      }`}
     >
-      {loading ? 'Redirecting…' : 'Checkout'}
+      {loading ? (
+        <>
+          <FaSpinner className="w-4 h-4 animate-spin" />
+          <span>{translate('checkout.processing', currentLanguage) || 'Processing...'}</span>
+        </>
+      ) : (
+        <>
+          <FaCreditCard className="w-4 h-4" />
+          <span>{translate('checkout.proceedToPayment', currentLanguage) || 'Proceed to Payment'}</span>
+        </>
+      )}
     </button>
   );
 };

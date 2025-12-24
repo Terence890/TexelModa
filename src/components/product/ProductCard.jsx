@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
+import { useTheme } from '../../context/ThemeContext';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { translate } from '../../utils/translate';
@@ -11,6 +12,7 @@ const ProductCard = ({ product }) => {
   const [showPreview, setShowPreview] = useState(false);
   const navigate = useNavigate();
   const { currentLanguage } = useLanguage();
+  const { isDarkMode } = useTheme();
   const { addToCart } = useCart();
   const { wishlistItems, addToWishlist, removeFromWishlist } = useWishlist();
 
@@ -50,21 +52,15 @@ const ProductCard = ({ product }) => {
       
       try {
         const dataURL = canvas.toDataURL('image/jpeg');
-        console.log('Successfully converted image to data URL');
-        
         // Navigate with the data URL
         navigate('/try-on', { state: { selectedClothing: dataURL } });
       } catch (err) {
-        console.error('Error converting image to data URL:', err);
-        
         // Fallback - navigate with original image path
-        console.log('Falling back to original image path');
         navigate('/try-on', { state: { selectedClothing: image } });
       }
     };
     
     img.onerror = () => {
-      console.error('Failed to load image for try-on');
       navigate('/try-on', { state: { selectedClothing: image } });
     };
     
@@ -159,7 +155,7 @@ const ProductCard = ({ product }) => {
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >
-      <Link to={`/product/${id}`} className="block overflow-hidden bg-white dark:bg-surface-dark rounded-lg shadow-md hover:shadow-xl dark:shadow-gray-800 dark:hover:shadow-gray-700/50 transition-all duration-300 h-full">
+      <Link to={`/product/${id}`} className="block overflow-hidden bg-white dark:bg-surface-dark rounded-xl shadow-lg hover:shadow-2xl dark:shadow-gray-800 dark:hover:shadow-gray-700/50 transition-all duration-300 h-full cursor-pointer">
         <div className="relative overflow-hidden">
           {/* Image Container - Fixed aspect ratio */}
           <div className="aspect-[3/4] w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
@@ -184,12 +180,12 @@ const ProductCard = ({ product }) => {
             )}
           </div>
           
-          {/* Action Icons - Aligned above Add to Cart */}
-          <div className="flex flex-row items-center justify-center gap-3 mt-4 mb-2">
+          {/* Action Icons - Overlay on hover */}
+          <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-sm">
             {/* Preview Button */}
             <motion.button 
-              onClick={e => { e.preventDefault(); setShowPreview(true); }}
-              className="bg-white dark:bg-gray-800 text-primary dark:text-primary-light rounded-full p-3 hover:bg-primary hover:text-white dark:hover:bg-primary-light dark:hover:text-gray-800 transition-colors shadow-md"
+              onClick={e => { e.preventDefault(); e.stopPropagation(); setShowPreview(true); }}
+              className="bg-white/95 dark:bg-gray-800/95 text-primary dark:text-primary-light rounded-xl p-3 hover:bg-primary hover:text-white dark:hover:bg-primary-light dark:hover:text-gray-800 transition-colors shadow-lg"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               title={translate('product.preview', currentLanguage) || "Preview"}
@@ -201,8 +197,8 @@ const ProductCard = ({ product }) => {
             </motion.button>
             {/* Like Button */}
             <motion.button 
-              onClick={toggleWishlist}
-              className={`bg-white dark:bg-gray-800 ${isInWishlist ? 'text-red-500' : 'text-primary dark:text-primary-light'} rounded-full p-3 hover:bg-primary hover:text-white dark:hover:bg-primary-light dark:hover:text-gray-800 transition-colors shadow-md`}
+              onClick={e => { e.preventDefault(); e.stopPropagation(); toggleWishlist(e); }}
+              className={`bg-white/95 dark:bg-gray-800/95 ${isInWishlist ? 'text-red-500' : 'text-primary dark:text-primary-light'} rounded-xl p-3 hover:bg-primary hover:text-white dark:hover:bg-primary-light dark:hover:text-gray-800 transition-colors shadow-lg`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               title={isInWishlist ? translate('wishlist.remove', currentLanguage) || "Remove from Wishlist" : translate('wishlist.addToWishlist', currentLanguage) || "Add to Wishlist"}
@@ -213,8 +209,8 @@ const ProductCard = ({ product }) => {
             </motion.button>
             {/* Try On Button */}
             <motion.button 
-              onClick={handleTryOn}
-              className="bg-white dark:bg-gray-800 text-primary dark:text-primary-light rounded-full p-3 hover:bg-primary hover:text-white dark:hover:bg-primary-light dark:hover:text-gray-800 transition-colors shadow-md"
+              onClick={e => { e.preventDefault(); e.stopPropagation(); handleTryOn(e); }}
+              className="bg-white/95 dark:bg-gray-800/95 text-primary dark:text-primary-light rounded-xl p-3 hover:bg-primary hover:text-white dark:hover:bg-primary-light dark:hover:text-gray-800 transition-colors shadow-lg"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               title={translate('product.tryOnThis', currentLanguage) || "Try On This Item"}
@@ -265,10 +261,14 @@ const ProductCard = ({ product }) => {
           {/* Add to Cart Button - Enhanced visibility */}
           <div className="py-3 mt-4 border-t border-gray-100 dark:border-gray-700">
             <motion.button
-              onClick={handleAddToCart}
-              className="w-full bg-primary text-white py-2.5 rounded-md hover:bg-primary/90 transition-colors text-sm font-medium shadow-sm"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              onClick={e => { e.preventDefault(); e.stopPropagation(); handleAddToCart(e); }}
+              className={`w-full py-3 rounded-xl font-semibold transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 ${
+                isDarkMode
+                  ? 'bg-gradient-to-r from-primary-dark to-primary-light hover:from-primary-light hover:to-primary-dark text-white'
+                  : 'bg-gradient-to-r from-primary-light to-primary-dark hover:from-primary-dark hover:to-primary-light text-white'
+              }`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               {translate('product.addToCart', currentLanguage) || "Add to Cart"}
             </motion.button>

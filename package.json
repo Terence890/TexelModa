@@ -11,21 +11,31 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@stripe/stripe-js": "^2.1.0",
     "axios": "^1.9.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^8.2.1",
     "framer-motion": "^12.12.1",
     "gsap": "^3.13.0",
+    "helmet": "^8.1.0",
+    "joi": "^18.0.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.0.2",
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.11",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-hook-form": "^7.68.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.0",
     "react-tsparticles": "^2.12.2",
-    "tsparticles": "^3.8.1"
-  ,
-    "@stripe/stripe-js": "^2.1.0",
-    "express": "^4.18.2",
     "stripe": "^12.13.0",
-    "dotenv": "^16.3.1",
-    "cors": "^2.8.5"
+    "tsparticles": "^3.8.1",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

@@ -78,7 +78,6 @@ const HomePage = () => {
       createParticles();
       animate();
     } catch (error) {
-      console.error('Error in particle animation:', error);
       setError('Failed to load animations. Please refresh the page.');
     }
 
@@ -118,7 +117,6 @@ const HomePage = () => {
         );
       });
     } catch (error) {
-      console.error('Error in animations:', error);
       setError('Failed to load animations. Please refresh the page.');
     }
   }, []);
@@ -455,4 +453,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage; 
+export default HomePage;

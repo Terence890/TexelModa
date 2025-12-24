@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { filterProducts } from '../data/products';
+import productsData, { filterProducts } from '../data/products';
+import { listZapposProducts } from '../api/zapposAPI';
 import ProductCard from '../components/product/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
 import { translate } from '../utils/translate';
@@ -36,6 +37,8 @@ const ShopPage = () => {
   
   // State for filtered products
   const [products, setProducts] = useState([]);
+  const [zapposProducts, setZapposProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   
   // State for sort option
   const [sortBy, setSortBy] = useState('featured');

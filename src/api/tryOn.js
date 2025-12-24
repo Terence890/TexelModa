@@ -3,8 +3,9 @@
  * Uses the Virtual Try-On Diffusion API from Texel.Moda via RapidAPI
  */
 
-const API_URL = 'https://try-on-diffusion.p.rapidapi.com';
-const API_KEY = 'd3b5128c35mshe2a3963600dd18ap13cd14jsnd241eae33f44';
+const API_URL = import.meta.env.VITE_TRYON_API_URL || 'https://try-on-diffusion.p.rapidapi.com';
+const API_KEY = import.meta.env.VITE_RAPIDAPI_KEY;
+const API_HOST = import.meta.env.VITE_TRYON_API_HOST || 'try-on-diffusion.p.rapidapi.com';
 
 /**
  * Convert a data URL to a Blob object
@@ -147,7 +148,7 @@ export const generateTryOn = async (
     method: 'POST',
     headers: {
       'X-RapidAPI-Key': API_KEY,
-      'X-RapidAPI-Host': 'try-on-diffusion.p.rapidapi.com'
+      'X-RapidAPI-Host': API_HOST
     },
     body: formData
   };
@@ -204,4 +205,4 @@ export const generateTryOn = async (
 };
 
 // Export additional helper functions as needed
-export const getRandomSeed = () => Math.floor(Math.random() * 2147483647); 
+export const getRandomSeed = () => Math.floor(Math.random() * 2147483647);

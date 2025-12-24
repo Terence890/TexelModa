@@ -12,11 +12,6 @@ import { CartProvider } from './context/CartContext'
 import Layout from './components/layout/Layout'
 
 // E-commerce Components
-import ShoppingCart from './components/ecommerce/ShoppingCart'
-import Wishlist from './components/ecommerce/Wishlist'
-import OrderTracking from './components/ecommerce/OrderTracking'
-import ReturnManagement from './components/ecommerce/ReturnManagement'
-import LoyaltyProgram from './components/ecommerce/LoyaltyProgram'
 
 // Lazy loaded pages
 const HomePage = lazy(() => import('./pages/HomePage'))
@@ -25,6 +20,12 @@ const ShopPage = lazy(() => import('./pages/ShopPage'))
 const ContactPage = lazy(() => import('./pages/ContactPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 const AccountPage = lazy(() => import('./pages/AccountPage'))
+const ProfilePage = lazy(() => import('./pages/ProfilePage'))
+const ProductDetailsPage = lazy(() => import('./pages/ProductDetailsPage'))
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage'))
+const CheckoutSuccessPage = lazy(() => import('./pages/CheckoutSuccessPage'))
+const CheckoutCancelPage = lazy(() => import('./pages/CheckoutCancelPage'))
+const OrdersPage = lazy(() => import('./pages/OrdersPage'))
 
 // Loading component
 const LoadingSpinner = () => (
@@ -139,7 +140,6 @@ const PageTransition = ({ children, title, description }) => {
 
 // Global error handler
 const handleError = (error) => {
-  console.error('Global error:', error)
   // Here you can add error reporting service integration
   // e.g., Sentry, LogRocket, etc.
 }
@@ -197,32 +197,34 @@ function App() {
                         <AccountPage />
                       </PageTransition>
                     } />
-                    <Route path="/ecommerce" element={
-                      <PageTransition title="E-commerce" description="Manage your shopping experience">
-                        <div className="container mx-auto px-4 py-8">
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-lg">
-                              <h2 className="text-2xl font-bold mb-4 text-text-light dark:text-text-dark">{translate('cart.title', currentLanguage)}</h2>
-                              <ShoppingCart />
-                            </div>
-                            <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-lg">
-                              <h2 className="text-2xl font-bold mb-4 text-text-light dark:text-text-dark">{translate('wishlist.title', currentLanguage)}</h2>
-                              <Wishlist />
-                            </div>
-                            <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-lg">
-                              <h2 className="text-2xl font-bold mb-4 text-text-light dark:text-text-dark">{translate('orderTracking.title', currentLanguage)}</h2>
-                              <OrderTracking />
-                            </div>
-                            <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-lg">
-                              <h2 className="text-2xl font-bold mb-4 text-text-light dark:text-text-dark">{translate('returns.title', currentLanguage)}</h2>
-                              <ReturnManagement />
-                            </div>
-                            <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-lg">
-                              <h2 className="text-2xl font-bold mb-4 text-text-light dark:text-text-dark">{translate('loyalty.title', currentLanguage)}</h2>
-                              <LoyaltyProgram />
-                            </div>
-                          </div>
-                        </div>
+                    <Route path="/profile" element={
+                      <PageTransition title="Profile" description="Manage your profile and addresses">
+                        <ProfilePage />
+                      </PageTransition>
+                    } />
+                    <Route path="/orders" element={
+                      <PageTransition title="My Orders" description="View and manage your orders">
+                        <OrdersPage />
+                      </PageTransition>
+                    } />
+                    <Route path="/product/:id" element={
+                      <PageTransition title="Product Details" description="View product details and specifications">
+                        <ProductDetailsPage />
+                      </PageTransition>
+                    } />
+                    <Route path="/checkout" element={
+                      <PageTransition title="Checkout" description="Complete your order">
+                        <CheckoutPage />
+                      </PageTransition>
+                    } />
+                    <Route path="/checkout/success" element={
+                      <PageTransition title="Payment Successful" description="Your order has been placed successfully">
+                        <CheckoutSuccessPage />
+                      </PageTransition>
+                    } />
+                    <Route path="/checkout/cancel" element={
+                      <PageTransition title="Payment Cancelled" description="Your payment was cancelled">
+                        <CheckoutCancelPage />
                       </PageTransition>
                     } />
                     <Route path="*" element={

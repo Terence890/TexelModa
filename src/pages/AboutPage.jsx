@@ -80,14 +80,14 @@ const AboutPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               {
-                name: translate('about.team.terence.name', currentLanguage),
-                role: translate('about.team.terence.role', currentLanguage),
-                bio: translate('about.team.terence.bio', currentLanguage)
+                name: translate('about.team.name', currentLanguage),
+                role: translate('about.team.role', currentLanguage),
+                bio: translate('about.team.bio', currentLanguage)
               },
               {
-                name: translate('about.team.dilan.name', currentLanguage),
-                role: translate('about.team.dilan.role', currentLanguage),
-                bio: translate('about.team.dilan.bio', currentLanguage)
+                name: translate('about.team.name', currentLanguage),
+                role: translate('about.team.role', currentLanguage),
+                bio: translate('about.team.bio', currentLanguage)
               }
             ].map((member, index) => (
               <div key={index} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col items-center">
