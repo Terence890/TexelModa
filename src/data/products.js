@@ -1,41 +1,9 @@
-import female01 from '../assets/clothing/female_01.jpg';
-import female02 from '../assets/clothing/female_02.jpg';
-import female03 from '../assets/clothing/female_03.jpg';
-import female04 from '../assets/clothing/female_04.jpg';
-import female05 from '../assets/clothing/female_05.jpg';
-import female06 from '../assets/clothing/female_06.jpg';
-import female07 from '../assets/clothing/female_07.jpg';
-import female08 from '../assets/clothing/female_08.jpg';
-import female09 from '../assets/clothing/female_09.jpg';
-import male01 from '../assets/clothing/male_01.jpg';
-import male02 from '../assets/clothing/male_02.jpg';
-import male03 from '../assets/clothing/male_03.jpg';
-import male04 from '../assets/clothing/male_04.jpg';
-import male05 from '../assets/clothing/male_05.jpg';
-import male06 from '../assets/clothing/male_06.jpg';
-import male07 from '../assets/clothing/male_07.jpg';
-import male08 from '../assets/clothing/male_08.jpg';
-import male09 from '../assets/clothing/male_09.jpg';
-import bottom1 from '../assets/clothing/bottom1.png';
-import bottom2 from '../assets/clothing/bottom2.PNG';
-import bottom3 from '../assets/clothing/bottom3.JPG';
-import bottom4 from '../assets/clothing/bottom4.PNG';
-import bottom5 from '../assets/clothing/bottom5.png';
-import dress1 from '../assets/clothing/dress1.png';
-import dress2 from '../assets/clothing/dress2.png';
-import top3 from '../assets/clothing/top3.JPG';
-import top4 from '../assets/clothing/top4.png';
-import top5 from '../assets/clothing/top5.png';
-import top111 from '../assets/clothing/top111.png';
-import top222 from '../assets/clothing/top222.JPG';
-import top333 from '../assets/clothing/top333.png';
-
 const products = [
   {
     id: 1,
     name: 'Women\'s Summer Dress',
     price: 79.99,
-    image: female01,
+    image: '/images/products/female_01.jpg',
     category: 'dresses',
     gender: 'women',
     colors: ['white', 'floral'],
@@ -50,7 +18,7 @@ const products = [
     id: 2,
     name: 'Women\'s Casual Outfit',
     price: 89.99,
-    image: female02,
+    image: '/images/products/female_02.jpg',
     category: 'casual',
     gender: 'women',
     colors: ['white', 'blue'],
@@ -65,7 +33,7 @@ const products = [
     id: 3,
     name: 'Women\'s Elegant Dress',
     price: 124.99,
-    image: female03,
+    image: '/images/products/female_03.jpg',
     category: 'dresses',
     gender: 'women',
     colors: ['black'],
@@ -80,7 +48,7 @@ const products = [
     id: 4,
     name: 'Women\'s Fashion Top',
     price: 49.99,
-    image: female04,
+    image: '/images/products/female_04.jpg',
     category: 'tops',
     gender: 'women',
     colors: ['white'],
@@ -95,7 +63,7 @@ const products = [
     id: 5,
     name: 'Women\'s Formal Suit',
     price: 149.99,
-    image: female05,
+    image: '/images/products/female_05.jpg',
     category: 'suits',
     gender: 'women',
     colors: ['grey'],
@@ -110,7 +78,7 @@ const products = [
     id: 6,
     name: 'Women\'s Blazer',
     price: 129.99,
-    image: female06,
+    image: '/images/products/female_06.jpg',
     category: 'blazers',
     gender: 'women',
     colors: ['beige'],
@@ -125,7 +93,7 @@ const products = [
     id: 7,
     name: 'Women\'s Casual Sweater',
     price: 59.99,
-    image: female07,
+    image: '/images/products/female_07.jpg',
     category: 'sweaters',
     gender: 'women',
     colors: ['white'],
@@ -140,7 +108,7 @@ const products = [
     id: 8,
     name: 'Women\'s Denim Outfit',
     price: 89.99,
-    image: female08,
+    image: '/images/products/female_08.jpg',
     category: 'casual',
     gender: 'women',
     colors: ['denim', 'blue'],
@@ -155,7 +123,7 @@ const products = [
     id: 9,
     name: 'Women\'s Summer Top',
     price: 44.99,
-    image: female09,
+    image: '/images/products/female_09.jpg',
     category: 'tops',
     gender: 'women',
     colors: ['white', 'yellow'],
@@ -170,7 +138,7 @@ const products = [
     id: 10,
     name: 'Men\'s Formal Suit',
     price: 199.99,
-    image: male01,
+    image: '/images/products/male_01.jpg',
     category: 'suits',
     gender: 'men',
     colors: ['black'],
@@ -185,7 +153,7 @@ const products = [
     id: 11,
     name: 'Men\'s Business Casual',
     price: 159.99,
-    image: male02,
+    image: '/images/products/male_02.jpg',
     category: 'business-casual',
     gender: 'men',
     colors: ['blue', 'white'],
@@ -200,7 +168,7 @@ const products = [
     id: 12,
     name: 'Men\'s Casual Shirt',
     price: 59.99,
-    image: male03,
+    image: '/images/products/male_03.jpg',
     category: 'shirts',
     gender: 'men',
     colors: ['blue', 'white'],
@@ -215,7 +183,7 @@ const products = [
     id: 13,
     name: 'Men\'s Winter Coat',
     price: 189.99,
-    image: male04,
+    image: '/images/products/male_04.jpg',
     category: 'outerwear',
     gender: 'men',
     colors: ['black', 'grey'],
@@ -230,7 +198,7 @@ const products = [
     id: 14,
     name: 'Men\'s Casual Look',
     price: 119.99,
-    image: male05,
+    image: '/images/products/male_05.jpg',
     category: 'casual',
     gender: 'men',
     colors: ['grey', 'black'],
@@ -245,7 +213,7 @@ const products = [
     id: 15,
     name: 'Men\'s Denim Jacket',
     price: 89.99,
-    image: male06,
+    image: '/images/products/male_06.jpg',
     category: 'jackets',
     gender: 'men',
     colors: ['denim', 'blue'],
@@ -260,7 +228,7 @@ const products = [
     id: 16,
     name: 'Men\'s Polo Shirt',
     price: 39.99,
-    image: male07,
+    image: '/images/products/male_07.jpg',
     category: 'shirts',
     gender: 'men',
     colors: ['navy'],
@@ -275,7 +243,7 @@ const products = [
     id: 17,
     name: 'Men\'s Casual T-Shirt',
     price: 34.99,
-    image: male08,
+    image: '/images/products/male_08.jpg',
     category: 'shirts',
     gender: 'men',
     colors: ['white'],
@@ -290,7 +258,7 @@ const products = [
     id: 18,
     name: 'Men\'s Summer Outfit',
     price: 79.99,
-    image: male09,
+    image: '/images/products/male_09.jpg',
     category: 'casual',
     gender: 'men',
     colors: ['white', 'blue'],
@@ -305,7 +273,7 @@ const products = [
     id: 19,
     name: 'Women\'s Bottom 1',
     price: 89.99,
-    image: bottom1,
+    image: '/images/products/bottom1.png',
     category: 'bottoms',
     gender: 'women',
     colors: ['blue'],
@@ -320,7 +288,7 @@ const products = [
     id: 20,
     name: 'Women\'s Bottom 2',
     price: 89.99,
-    image: bottom2,
+    image: '/images/products/bottom2.PNG',
     category: 'bottoms',
     gender: 'women',
     colors: ['blue'],
@@ -335,7 +303,7 @@ const products = [
     id: 21,
     name: 'Women\'s Bottom 3',
     price: 89.99,
-    image: bottom3,
+    image: '/images/products/bottom3.JPG',
     category: 'bottoms',
     gender: 'women',
     colors: ['blue'],
@@ -350,7 +318,7 @@ const products = [
     id: 22,
     name: 'Women\'s Bottom 4',
     price: 89.99,
-    image: bottom4,
+    image: '/images/products/bottom4.PNG',
     category: 'bottoms',
     gender: 'women',
     colors: ['blue'],
@@ -365,7 +333,7 @@ const products = [
     id: 23,
     name: 'Women\'s Bottom 5',
     price: 89.99,
-    image: bottom5,
+    image: '/images/products/bottom5.png',
     category: 'bottoms',
     gender: 'women',
     colors: ['blue'],
@@ -380,7 +348,7 @@ const products = [
     id: 24,
     name: 'Women\'s Dress 1',
     price: 119.99,
-    image: dress1,
+    image: '/images/products/dress1.png',
     category: 'dresses',
     gender: 'women',
     colors: ['white'],
@@ -395,7 +363,7 @@ const products = [
     id: 25,
     name: 'Women\'s Dress 2',
     price: 119.99,
-    image: dress2,
+    image: '/images/products/dress2.png',
     category: 'dresses',
     gender: 'women',
     colors: ['white'],
@@ -410,7 +378,7 @@ const products = [
     id: 26,
     name: 'Women\'s Top 3',
     price: 59.99,
-    image: top3,
+    image: '/images/products/top3.JPG',
     category: 'tops',
     gender: 'women',
     colors: ['white'],
@@ -425,7 +393,7 @@ const products = [
     id: 27,
     name: 'Women\'s Top 4',
     price: 59.99,
-    image: top4,
+    image: '/images/products/top4.png',
     category: 'tops',
     gender: 'women',
     colors: ['white'],
@@ -440,7 +408,7 @@ const products = [
     id: 28,
     name: 'Women\'s Top 5',
     price: 59.99,
-    image: top5,
+    image: '/images/products/top5.png',
     category: 'tops',
     gender: 'women',
     colors: ['white'],
@@ -455,7 +423,7 @@ const products = [
     id: 29,
     name: 'Women\'s Top 111',
     price: 59.99,
-    image: top111,
+    image: '/images/products/top111.png',
     category: 'tops',
     gender: 'women',
     colors: ['white'],
@@ -470,7 +438,7 @@ const products = [
     id: 30,
     name: 'Women\'s Top 222',
     price: 59.99,
-    image: top222,
+    image: '/images/products/top222.JPG',
     category: 'tops',
     gender: 'women',
     colors: ['white'],
@@ -485,7 +453,7 @@ const products = [
     id: 31,
     name: 'Women\'s Top 333',
     price: 59.99,
-    image: top333,
+    image: '/images/products/top333.png',
     category: 'tops',
     gender: 'women',
     colors: ['white'],
@@ -558,4 +526,4 @@ export const getNewArrivals = (count = 4) => {
     .slice(0, count);
 };
 
-export default products; 
+export default products;

@@ -6,6 +6,8 @@ import { useTheme } from '../../context/ThemeContext';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { translate } from '../../utils/translate';
+import RegisterModal from '../auth/RegisterModal';
+import LoginModal from '../auth/LoginModal';
 
 const ProductCard = ({ product }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -139,6 +141,7 @@ const ProductCard = ({ product }) => {
   // Toggle wishlist status
   const toggleWishlist = (e) => {
     e.preventDefault();
+    
     if (isInWishlist) {
       removeFromWishlist(id);
     } else {
@@ -332,6 +335,18 @@ const ProductCard = ({ product }) => {
           </motion.div>
         </div>
       )}
+
+    {/* Auth Modals */}
+    <RegisterModal
+      isOpen={false}
+      onClose={() => {}}
+      onSwitchToLogin={() => {}}
+    />
+    <LoginModal
+      isOpen={false}
+      onClose={() => {}}
+      onSwitchToRegister={() => {}}
+    />
     </>
   );
 };
@@ -369,4 +384,4 @@ function PreviewImage({ src, alt }) {
       onError={() => setError(true)}
     />
   );
-} 
+}

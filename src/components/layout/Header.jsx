@@ -115,25 +115,26 @@ const Header = () => {
       ref={headerRef}
       className={`fixed w-full z-50 transition-all duration-300 ${
         isScrolled
-          ? 'shadow-lg' // fallback for users without JS
+          ? 'shadow-lg'
           : ''
       }`}
       style={{ willChange: 'transform, box-shadow, backdrop-filter, background' }}
     >
-      <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <img src="/image.png" alt="TexelModa Logo" style={{ height: 40 }} />
-            <span className="text-2xl font-bold bg-gradient-to-r from-[#ff5ca7] via-[#a259e6] to-[#3ed6e0] bg-clip-text text-transparent drop-shadow">
-                TexelModa
+      <div className="w-full max-w-[1920px] mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
+          {/* Logo - Hide text on mobile, show only image */}
+          <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
+            <img src="/image.png" alt="TexelModa Logo" className="h-7 sm:h-8 lg:h-10" />
+            {/* Hide text on mobile (below sm), show on sm and up */}
+            <span className="hidden sm:block text-xl lg:text-2xl font-bold bg-gradient-to-r from-[#ff5ca7] via-[#a259e6] to-[#3ed6e0] bg-clip-text text-transparent drop-shadow whitespace-nowrap">
+              TexelModa
             </span>
           </Link>
           
           {/* Desktop Navigation */}
           <nav ref={navRef} className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-                <Link 
+              <Link 
                 key={item.path}
                 to={item.path}
                 className={`relative group ${
@@ -146,320 +147,354 @@ const Header = () => {
                   {item.label}
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-light dark:bg-primary-dark transition-all duration-300 group-hover:w-full" />
                 </span>
-                </Link>
+              </Link>
             ))}
           </nav>
           
-          {/* Right Section */}
-          <div className="flex items-center space-x-2 sm:space-x-3">
-            {/* Shopping Cart */}
-            <div className="hidden sm:block">
-              <ShoppingCart />
-            </div>
-            
-            {/* Wishlist */}
-            <div className="hidden sm:block">
-              <Wishlist />
-            </div>
-
+          {/* Right Section - Icons in specific order */}
+          <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-3">
             {/* Auth Buttons / User Menu */}
             {isAuthenticated ? (
-              <div className="relative" ref={userMenuRef}>
-                <button
-                  onClick={() => setShowUserMenu(!showUserMenu)}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-xl transition-all duration-200 ${
-                    isDarkMode
-                      ? 'bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white'
-                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900'
-                  }`}
+              <>
+                {/* Desktop User Menu */}
+                <div className="relative hidden lg:block" ref={userMenuRef}>
+                  <button
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-xl transition-all duration-200 ${
+                      isDarkMode
+                        ? 'bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white'
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900'
+                    }`}
+                  >
+                    {user?.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt={user.fullName}
+                        className="w-8 h-8 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700"
+                      />
+                    ) : (
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        isDarkMode
+                          ? 'bg-gradient-to-br from-primary-dark to-primary-light'
+                          : 'bg-gradient-to-br from-primary-light to-primary-dark'
+                      }`}>
+                        <FaUser className="w-4 h-4 text-white" />
+                      </div>
+                    )}
+                    <span className="hidden md:block text-sm font-medium">
+                      {user?.fullName || 'User'}
+                    </span>
+                  </button>
+
+                  {/* User Dropdown Menu */}
+                  <AnimatePresence>
+                    {showUserMenu && (
+                      <>
+                        {/* Backdrop */}
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          onClick={() => setShowUserMenu(false)}
+                          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+                        />
+                        
+                        {/* Dropdown Panel */}
+                        <motion.div
+                          initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                          transition={{ duration: 0.2 }}
+                          className={`absolute right-0 mt-3 w-64 rounded-2xl shadow-2xl z-50 ${
+                            isDarkMode
+                              ? 'bg-gray-800/95 backdrop-blur-md border border-gray-700/50'
+                              : 'bg-white/95 backdrop-blur-md border border-gray-200/50'
+                          }`}
+                        >
+                          {/* User Info Header */}
+                          <div className={`p-4 border-b ${
+                            isDarkMode ? 'border-gray-700' : 'border-gray-200'
+                          }`}>
+                            <div className="flex items-center space-x-3">
+                              {user?.avatar ? (
+                                <img
+                                  src={user.avatar}
+                                  alt={user.fullName}
+                                  className="w-12 h-12 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700"
+                                />
+                              ) : (
+                                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                                  isDarkMode
+                                    ? 'bg-gradient-to-br from-primary-dark to-primary-light'
+                                    : 'bg-gradient-to-br from-primary-light to-primary-dark'
+                                }`}>
+                                  <FaUser className="w-6 h-6 text-white" />
+                                </div>
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <p className={`text-sm font-semibold truncate ${
+                                  isDarkMode ? 'text-white' : 'text-gray-900'
+                                }`}>
+                                  {user?.fullName || 'User'}
+                                </p>
+                                <p className={`text-xs truncate ${
+                                  isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                                }`}>
+                                  {user?.email || ''}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Menu Items */}
+                          <div className="p-2">
+                            <Link
+                              to="/profile"
+                              onClick={() => setShowUserMenu(false)}
+                              className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                                location.pathname === '/profile'
+                                  ? isDarkMode
+                                    ? 'bg-gradient-to-r from-primary-dark to-primary-light text-white'
+                                    : 'bg-gradient-to-r from-primary-light to-primary-dark text-white'
+                                  : isDarkMode
+                                  ? 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
+                                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                              }`}
+                            >
+                              <FaUser className="w-4 h-4" />
+                              <span className="text-sm font-medium">
+                                {translate('nav.profile', currentLanguage) || 'Profile'}
+                              </span>
+                            </Link>
+                            
+                            <Link
+                              to="/account"
+                              onClick={() => setShowUserMenu(false)}
+                              className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                                location.pathname === '/account'
+                                  ? isDarkMode
+                                    ? 'bg-gradient-to-r from-primary-dark to-primary-light text-white'
+                                    : 'bg-gradient-to-r from-primary-light to-primary-dark text-white'
+                                  : isDarkMode
+                                  ? 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
+                                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                              }`}
+                            >
+                              <FaShoppingBag className="w-4 h-4" />
+                              <span className="text-sm font-medium">
+                                {translate('nav.orders', currentLanguage) || 'Orders'}
+                              </span>
+                            </Link>
+                          </div>
+
+                          {/* Divider */}
+                          <div className={`border-t ${
+                            isDarkMode ? 'border-gray-700' : 'border-gray-200'
+                          }`} />
+
+                          {/* Logout Button */}
+                          <div className="p-2">
+                            <button
+                              onClick={handleLogout}
+                              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                                isDarkMode
+                                  ? 'text-red-400 hover:bg-red-900/20 hover:text-red-300'
+                                  : 'text-red-600 hover:bg-red-50 hover:text-red-700'
+                              }`}
+                            >
+                              <FaSignOutAlt className="w-4 h-4" />
+                              <span className="text-sm font-medium">
+                                {translate('auth.logout', currentLanguage) || 'Logout'}
+                              </span>
+                            </button>
+                          </div>
+                        </motion.div>
+                      </>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Mobile Profile Icon - Circular */}
+                <Link
+                  to="/profile"
+                  className="lg:hidden flex-shrink-0"
+                  aria-label="Profile"
+                  title="Profile"
                 >
                   {user?.avatar ? (
                     <img
                       src={user.avatar}
                       alt={user.fullName}
-                      className="w-8 h-8 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700"
+                      className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600 hover:border-primary-light dark:hover:border-primary-dark transition-all duration-200"
                     />
                   ) : (
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center border-2 transition-all duration-200 ${
                       isDarkMode
-                        ? 'bg-gradient-to-br from-primary-dark to-primary-light'
-                        : 'bg-gradient-to-br from-primary-light to-primary-dark'
+                        ? 'bg-gradient-to-br from-primary-dark to-primary-light border-gray-600 hover:border-primary-dark'
+                        : 'bg-gradient-to-br from-primary-light to-primary-dark border-gray-300 hover:border-primary-light'
                     }`}>
                       <FaUser className="w-4 h-4 text-white" />
                     </div>
                   )}
-                  <span className="hidden md:block text-sm font-medium">
-                    {user?.fullName || 'User'}
-                  </span>
-                </button>
-
-                {/* User Dropdown Menu */}
-                <AnimatePresence>
-                  {showUserMenu && (
-                    <>
-                      {/* Backdrop */}
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={() => setShowUserMenu(false)}
-                        className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
-                      />
-                      
-                      {/* Dropdown Panel */}
-                      <motion.div
-                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                        className={`absolute right-0 mt-3 w-64 rounded-2xl shadow-2xl z-50 ${
-                          isDarkMode
-                            ? 'bg-gray-800/95 backdrop-blur-md border border-gray-700/50'
-                            : 'bg-white/95 backdrop-blur-md border border-gray-200/50'
-                        }`}
-                      >
-                        {/* User Info Header */}
-                        <div className={`p-4 border-b ${
-                          isDarkMode ? 'border-gray-700' : 'border-gray-200'
-                        }`}>
-                          <div className="flex items-center space-x-3">
-                            {user?.avatar ? (
-                              <img
-                                src={user.avatar}
-                                alt={user.fullName}
-                                className="w-12 h-12 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700"
-                              />
-                            ) : (
-                              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                                isDarkMode
-                                  ? 'bg-gradient-to-br from-primary-dark to-primary-light'
-                                  : 'bg-gradient-to-br from-primary-light to-primary-dark'
-                              }`}>
-                                <FaUser className="w-6 h-6 text-white" />
-                              </div>
-                            )}
-                            <div className="flex-1 min-w-0">
-                              <p className={`text-sm font-semibold truncate ${
-                                isDarkMode ? 'text-white' : 'text-gray-900'
-                              }`}>
-                                {user?.fullName || 'User'}
-                              </p>
-                              <p className={`text-xs truncate ${
-                                isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                              }`}>
-                                {user?.email || ''}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Menu Items */}
-                        <div className="p-2">
-                          <Link
-                            to="/profile"
-                            onClick={() => setShowUserMenu(false)}
-                            className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                              location.pathname === '/profile'
-                                ? isDarkMode
-                                  ? 'bg-gradient-to-r from-primary-dark to-primary-light text-white'
-                                  : 'bg-gradient-to-r from-primary-light to-primary-dark text-white'
-                                : isDarkMode
-                                ? 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
-                                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                            }`}
-                          >
-                            <FaUser className="w-4 h-4" />
-                            <span className="text-sm font-medium">
-                              {translate('nav.profile', currentLanguage) || 'Profile'}
-                            </span>
-                          </Link>
-                          
-                          <Link
-                            to="/account"
-                            onClick={() => setShowUserMenu(false)}
-                            className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                              location.pathname === '/account'
-                                ? isDarkMode
-                                  ? 'bg-gradient-to-r from-primary-dark to-primary-light text-white'
-                                  : 'bg-gradient-to-r from-primary-light to-primary-dark text-white'
-                                : isDarkMode
-                                ? 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
-                                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                            }`}
-                          >
-                            <FaShoppingBag className="w-4 h-4" />
-                            <span className="text-sm font-medium">
-                              {translate('nav.orders', currentLanguage) || 'Orders'}
-                            </span>
-                          </Link>
-                        </div>
-
-                        {/* Divider */}
-                        <div className={`border-t ${
-                          isDarkMode ? 'border-gray-700' : 'border-gray-200'
-                        }`} />
-
-                        {/* Logout Button */}
-                        <div className="p-2">
-                          <button
-                            onClick={handleLogout}
-                            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                              isDarkMode
-                                ? 'text-red-400 hover:bg-red-900/20 hover:text-red-300'
-                                : 'text-red-600 hover:bg-red-50 hover:text-red-700'
-                            }`}
-                          >
-                            <FaSignOutAlt className="w-4 h-4" />
-                            <span className="text-sm font-medium">
-                              {translate('auth.logout', currentLanguage) || 'Logout'}
-                            </span>
-                          </button>
-                        </div>
-                      </motion.div>
-                    </>
-                  )}
-                </AnimatePresence>
-              </div>
+                </Link>
+              </>
             ) : (
               <>
-                {/* MOBILE: Icon-only Login/Signup (below lg breakpoint) */}
-                <div className="flex lg:hidden items-center space-x-1">
-                  {/* Login Icon Button - Mobile Only */}
-                  <button
-                    onClick={() => setShowLoginModal(true)}
-                    className={`p-2.5 rounded-full transition-all duration-200 ${
-                      isDarkMode
-                        ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
-                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                    aria-label="Login"
-                  >
-                    <FaSignInAlt className="w-5 h-5" />
-                  </button>
+                {/* 1. Login Icon - FIRST */}
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className={`p-2 rounded-full transition-all duration-200 flex-shrink-0 ${
+                    isDarkMode
+                      ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                  aria-label="Login"
+                  title="Login"
+                >
+                  <FaSignInAlt className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
 
-                  {/* Signup Icon Button - Mobile Only - SAME STYLE AS LOGIN */}
-                  <button
-                    onClick={() => setShowRegisterModal(true)}
-                    className={`p-2.5 rounded-full transition-all duration-200 ${
-                      isDarkMode
-                        ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
-                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                    aria-label="Sign Up"
-                  >
-                    <FaUserPlus className="w-5 h-5" />
-                  </button>
-                </div>
-
-                {/* DESKTOP: Text Buttons (lg breakpoint and above) */}
-                <div className="hidden lg:flex items-center space-x-2">
-                  <button
-                    onClick={() => setShowLoginModal(true)}
-                    className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200 ${
-                      isDarkMode
-                        ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
-                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    <FaSignInAlt className="inline mr-2" />
-                    {translate('auth.login', currentLanguage) || 'Login'}
-                  </button>
-                  
-                  {/* Signup Button - SAME STYLE AS LOGIN */}
-                  <button
-                    onClick={() => setShowRegisterModal(true)}
-                    className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200 ${
-                      isDarkMode
-                        ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
-                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    <FaUserPlus className="inline mr-2" />
-                    {translate('auth.signUp', currentLanguage) || 'Sign Up'}
-                  </button>
-                </div>
+                {/* 2. Register Icon - SECOND */}
+                <button
+                  onClick={() => setShowRegisterModal(true)}
+                  className={`p-2 rounded-full transition-all duration-200 flex-shrink-0 ${
+                    isDarkMode
+                      ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                  aria-label="Sign Up"
+                  title="Sign Up"
+                >
+                  <FaUserPlus className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
               </>
             )}
 
-            {/* Theme Toggle */}
+            {/* 3. Wishlist - THIRD */}
+            <div className="flex-shrink-0">
+              <Wishlist />
+            </div>
+            
+            {/* 4. Shopping Cart - FOURTH */}
+            <div className="flex-shrink-0">
+              <ShoppingCart />
+            </div>
+
+            {/* 5. Language Selector - FIFTH */}
+            <div className="flex-shrink-0">
+              <LanguageSelector />
+            </div>
+
+            {/* 6. Theme Toggle - SIXTH */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors flex items-center justify-center"
+              className={`p-2 rounded-full transition-colors flex-shrink-0 ${
+                isDarkMode
+                  ? 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+              }`}
               aria-label={translate('theme.switchToLight', currentLanguage)}
+              title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
             >
-              {isDarkMode ? <FaMoon className="text-xl" /> : <FaSun className="text-xl" />}
+              {isDarkMode ? <FaMoon className="w-4 h-4 sm:w-5 sm:h-5" /> : <FaSun className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
 
-            {/* Desktop Language Selector */}
-            <LanguageSelector />
-
-            {/* Mobile Menu Button */}
+            {/* 7. Mobile Menu Button - LAST (Burger Icon) */}
             <button 
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle mobile menu"
+              title="Menu"
             >
-              <div className="w-6 h-6 flex flex-col justify-around">
-                <span className={`block w-full h-0.5 transform transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2.5' : ''} ${isDarkMode ? 'bg-white' : 'bg-current'}`} />
-                <span className={`block w-full h-0.5 transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''} ${isDarkMode ? 'bg-white' : 'bg-current'}`} />
-                <span className={`block w-full h-0.5 transform transition-transform duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-2.5' : ''} ${isDarkMode ? 'bg-white' : 'bg-current'}`} />
+              <div className="w-5 h-5 sm:w-6 sm:h-6 flex flex-col justify-around">
+                <span className={`block w-full h-0.5 transform transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''} ${isDarkMode ? 'bg-white' : 'bg-gray-900'}`} />
+                <span className={`block w-full h-0.5 transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''} ${isDarkMode ? 'bg-white' : 'bg-gray-900'}`} />
+                <span className={`block w-full h-0.5 transform transition-transform duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''} ${isDarkMode ? 'bg-white' : 'bg-gray-900'}`} />
               </div>
             </button>
           </div>
         </div>
         
-        {/* Mobile Menu */}
-        <div
-          style={{ 
-            maxHeight: isMobileMenuOpen ? '600px' : '0',
-            opacity: isMobileMenuOpen ? 1 : 0,
-            transition: 'all 0.3s ease-in-out',
-            background: isMobileMenuOpen
-              ? (isDarkMode ? '#181e29' : '#fff')
-              : 'transparent',
-          }}
-          className="md:hidden overflow-hidden"
-        >
-          <nav className="py-4 space-y-2">
-            {navItems.map((item) => (
-                <Link 
-                key={item.path}
-                to={item.path}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`block px-4 py-2 rounded-lg transition-colors ${
-                  location.pathname === item.path
-                    ? 'bg-primary-light/10 text-primary-light dark:text-primary-dark'
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                }`}
-              >
-                {item.label}
-                </Link>
-            ))}
-            {/* Mobile Cart & Wishlist */}
-            <div className="flex items-center space-x-3 px-4 py-3 border-t border-gray-200 dark:border-gray-700">
-              <div className="flex-1">
-                <ShoppingCart />
-              </div>
-              <div className="flex-1">
-                <Wishlist />
-              </div>
-            </div>
-            <div className="flex items-center space-x-4 mt-2 px-4 pb-4">
-              {/* Theme Toggle Mobile */}
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors flex items-center justify-center"
-                aria-label={translate('theme.switchToLight', currentLanguage)}
-              >
-                {isDarkMode ? <FaMoon className="text-xl" /> : <FaSun className="text-xl" />}
-              </button>
-              {/* Mobile Language Selector */}
-              <div className="dark:text-white">
-                <LanguageSelector />
-              </div>
-            </div>
-          </nav>
-        </div>
+        {/* Mobile Menu - ONLY NAVIGATION LINKS */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className={`md:hidden overflow-hidden border-t ${
+                isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'
+              }`}
+            >
+              <nav className="py-3 space-y-1">
+                {/* Navigation Links Only */}
+                {navItems.map((item) => (
+                  <Link 
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`block px-4 py-2.5 rounded-lg mx-2 transition-colors text-sm sm:text-base ${
+                      location.pathname === item.path
+                        ? 'bg-gradient-to-r from-primary-light to-primary-dark text-white font-medium'
+                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+                
+                {/* User Menu in Mobile (if authenticated) */}
+                {isAuthenticated && (
+                  <>
+                    <div className={`border-t my-2 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`} />
+                    
+                    <Link
+                      to="/profile"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex items-center space-x-3 px-4 py-2.5 mx-2 rounded-lg transition-all duration-200 text-sm sm:text-base ${
+                        isDarkMode
+                          ? 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
+                          : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                      }`}
+                    >
+                      <FaUser className="w-4 h-4" />
+                      <span className="font-medium">{translate('nav.profile', currentLanguage) || 'Profile'}</span>
+                    </Link>
+                    
+                    <Link
+                      to="/account"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex items-center space-x-3 px-4 py-2.5 mx-2 rounded-lg transition-all duration-200 text-sm sm:text-base ${
+                        isDarkMode
+                          ? 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
+                          : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                      }`}
+                    >
+                      <FaShoppingBag className="w-4 h-4" />
+                      <span className="font-medium">{translate('nav.orders', currentLanguage) || 'Orders'}</span>
+                    </Link>
+                    
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-4 py-2.5 mx-2 rounded-lg transition-all duration-200 text-sm sm:text-base ${
+                        isDarkMode
+                          ? 'text-red-400 hover:bg-red-900/20 hover:text-red-300'
+                          : 'text-red-600 hover:bg-red-50 hover:text-red-700'
+                      }`}
+                    >
+                      <FaSignOutAlt className="w-4 h-4" />
+                      <span className="font-medium">{translate('auth.logout', currentLanguage) || 'Logout'}</span>
+                    </button>
+                  </>
+                )}
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Auth Modals */}

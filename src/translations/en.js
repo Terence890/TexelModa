@@ -321,6 +321,7 @@ export default {
   // Wishlist
   "wishlist.title": "My Wishlist",
   "wishlist.empty": "Your wishlist is empty",
+  "wishlist.clearAll": "Clear All",
   "wishlist.addToCart": "Add to Cart",
   "wishlist.remove": "Remove from Wishlist",
   "wishlist.addedToWishlist": "Added to wishlist",

@@ -9,6 +9,7 @@ import { translate } from './utils/translate'
 import { LanguageProvider, useLanguage } from './context/LanguageContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { CartProvider } from './context/CartContext'
+import { WishlistProvider } from './context/WishlistContext'
 import Layout from './components/layout/Layout'
 
 // E-commerce Components
@@ -155,103 +156,103 @@ function App() {
     }
   }, [])
 
-  const { currentLanguage } = useLanguage();
-
   return (
     <ErrorBoundary>
       <ThemeProvider>
         <LanguageProvider>
           <CartProvider>
-            <Router>
-              <ScrollToTop />
-              <Layout>
-                <Suspense fallback={<LoadingSpinner />}>
-                  <Routes>
-                    <Route path="/" element={
-                      <PageTransition title="Home" description="Welcome to Texel Moda - Your Virtual Fashion Experience">
-                        <HomePage />
-                      </PageTransition>
-                    } />
-                    <Route path="/try-on" element={
-                      <PageTransition title="Virtual Try-On" description="Try on clothes virtually with our advanced AI technology">
-                        <TryOnPage />
-                      </PageTransition>
-                    } />
-                    <Route path="/shop" element={
-                      <PageTransition title="Shop" description="Browse our latest collection of fashion items">
-                        <ShopPage />
-                      </PageTransition>
-                    } />
-                    <Route path="/contact" element={
-                      <PageTransition title="Contact" description="Get in touch with our team">
-                        <ContactPage />
-                      </PageTransition>
-                    } />
-                    <Route path="/about" element={
-                      <PageTransition title="About" description="Learn more about Texel Moda and our mission">
-                        <AboutPage />
-                      </PageTransition>
-                    } />
-                    <Route path="/account" element={
-                      <PageTransition title="My Account" description="Manage your account, orders, and preferences">
-                        <AccountPage />
-                      </PageTransition>
-                    } />
-                    <Route path="/profile" element={
-                      <PageTransition title="Profile" description="Manage your profile and addresses">
-                        <ProfilePage />
-                      </PageTransition>
-                    } />
-                    <Route path="/orders" element={
-                      <PageTransition title="My Orders" description="View and manage your orders">
-                        <OrdersPage />
-                      </PageTransition>
-                    } />
-                    <Route path="/product/:id" element={
-                      <PageTransition title="Product Details" description="View product details and specifications">
-                        <ProductDetailsPage />
-                      </PageTransition>
-                    } />
-                    <Route path="/checkout" element={
-                      <PageTransition title="Checkout" description="Complete your order">
-                        <CheckoutPage />
-                      </PageTransition>
-                    } />
-                    <Route path="/checkout/success" element={
-                      <PageTransition title="Payment Successful" description="Your order has been placed successfully">
-                        <CheckoutSuccessPage />
-                      </PageTransition>
-                    } />
-                    <Route path="/checkout/cancel" element={
-                      <PageTransition title="Payment Cancelled" description="Your payment was cancelled">
-                        <CheckoutCancelPage />
-                      </PageTransition>
-                    } />
-                    <Route path="*" element={
-                      <PageTransition title="Page Not Found" description="The page you're looking for doesn't exist">
-                        <div className="min-h-[60vh] flex items-center justify-center">
-                          <div className="text-center">
-                            <h1 className="text-4xl font-bold mb-4">Page Not Found</h1>
-                            <p className="text-lg mb-8 text-gray-600 dark:text-gray-300">
-                              The page you're looking for doesn't exist.
-                            </p>
-                            <Link 
-                              to="/"
-                              className="inline-flex items-center px-6 py-3 rounded-md bg-primary-light text-white hover:bg-primary-light/90 transition-colors"
-                            >
-                              <span>Go Home</span>
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                              </svg>
-                            </Link>
+            <WishlistProvider>
+              <Router>
+                <ScrollToTop />
+                <Layout>
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Routes>
+                      <Route path="/" element={
+                        <PageTransition title="Home" description="Welcome to Texel Moda - Your Virtual Fashion Experience">
+                          <HomePage />
+                        </PageTransition>
+                      } />
+                      <Route path="/try-on" element={
+                        <PageTransition title="Virtual Try-On" description="Try on clothes virtually with our advanced AI technology">
+                          <TryOnPage />
+                        </PageTransition>
+                      } />
+                      <Route path="/shop" element={
+                        <PageTransition title="Shop" description="Browse our latest collection of fashion items">
+                          <ShopPage />
+                        </PageTransition>
+                      } />
+                      <Route path="/contact" element={
+                        <PageTransition title="Contact" description="Get in touch with our team">
+                          <ContactPage />
+                        </PageTransition>
+                      } />
+                      <Route path="/about" element={
+                        <PageTransition title="About" description="Learn more about Texel Moda and our mission">
+                          <AboutPage />
+                        </PageTransition>
+                      } />
+                      <Route path="/account" element={
+                        <PageTransition title="My Account" description="Manage your account, orders, and preferences">
+                          <AccountPage />
+                        </PageTransition>
+                      } />
+                      <Route path="/profile" element={
+                        <PageTransition title="Profile" description="Manage your profile and addresses">
+                          <ProfilePage />
+                        </PageTransition>
+                      } />
+                      <Route path="/orders" element={
+                        <PageTransition title="My Orders" description="View and manage your orders">
+                          <OrdersPage />
+                        </PageTransition>
+                      } />
+                      <Route path="/product/:id" element={
+                        <PageTransition title="Product Details" description="View product details and specifications">
+                          <ProductDetailsPage />
+                        </PageTransition>
+                      } />
+                      <Route path="/checkout" element={
+                        <PageTransition title="Checkout" description="Complete your order">
+                          <CheckoutPage />
+                        </PageTransition>
+                      } />
+                      <Route path="/checkout/success" element={
+                        <PageTransition title="Payment Successful" description="Your order has been placed successfully">
+                          <CheckoutSuccessPage />
+                        </PageTransition>
+                      } />
+                      <Route path="/checkout/cancel" element={
+                        <PageTransition title="Payment Cancelled" description="Your payment was cancelled">
+                          <CheckoutCancelPage />
+                        </PageTransition>
+                      } />
+                      <Route path="*" element={
+                        <PageTransition title="Page Not Found" description="The page you're looking for doesn't exist">
+                          <div className="min-h-[60vh] flex items-center justify-center">
+                            <div className="text-center">
+                              <h1 className="text-4xl font-bold mb-4">Page Not Found</h1>
+                              <p className="text-lg mb-8 text-gray-600 dark:text-gray-300">
+                                The page you're looking for doesn't exist.
+                              </p>
+                              <Link 
+                                to="/"
+                                className="inline-flex items-center px-6 py-3 rounded-md bg-primary-light text-white hover:bg-primary-light/90 transition-colors"
+                              >
+                                <span>Go Home</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                                </svg>
+                              </Link>
+                            </div>
                           </div>
-                        </div>
-                      </PageTransition>
-                    } />
-                  </Routes>
-                </Suspense>
-              </Layout>
-            </Router>
+                        </PageTransition>
+                      } />
+                    </Routes>
+                  </Suspense>
+                </Layout>
+              </Router>
+            </WishlistProvider>
           </CartProvider>
         </LanguageProvider>
       </ThemeProvider>

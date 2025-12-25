@@ -92,16 +92,26 @@ const ProfileForm = ({ onSuccess }) => {
 
     try {
       const response = await updateProfile(data);
-      if (response.data.success) {
-        updateUser(response.data.data.user);
-        setSuccess(true);
-        setTimeout(() => {
-          setSuccess(false);
-          if (onSuccess) onSuccess();
-        }, 2000);
+      console.log('Update profile response:', response);
+      
+      if (response?.data?.success) {
+        const updatedUser = response.data.data?.user;
+        if (updatedUser) {
+          updateUser(updatedUser);
+          setSuccess(true);
+          setTimeout(() => {
+            setSuccess(false);
+            if (onSuccess) onSuccess();
+          }, 2000);
+        } else {
+          setError('Invalid response from server');
+        }
+      } else {
+        setError(response?.data?.message || 'Failed to update profile');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update profile');
+      console.error('Profile update error:', err);
+      setError(err.response?.data?.message || err.message || 'Failed to update profile');
     } finally {
       setIsLoading(false);
     }

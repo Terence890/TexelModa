@@ -6,13 +6,13 @@ import { useTheme } from '../context/ThemeContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { translate } from '../utils/translate';
+import { getProductById } from '../data/products';
 import { 
   FaHeart, 
   FaShoppingCart, 
   FaStar, 
   FaChevronLeft, 
   FaShareAlt,
-  FaCheck,
   FaTruck,
   FaUndo,
   FaShieldAlt,
@@ -35,37 +35,43 @@ const ProductDetailsPage = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        // Try to fetch from API first
-        try {
-          const response = await apiClient.get(`/api/products/${id}`);
-          if (response.data.success) {
-            setProduct(response.data.product);
-            if (response.data.product.colors && response.data.product.colors.length > 0) {
-              setSelectedColor(response.data.product.colors[0]);
-            }
-            if (response.data.product.sizes && response.data.product.sizes.length > 0) {
-              setSelectedSize(response.data.product.sizes[0]);
-            }
+        setError(null);
+        
+        // Convert ID to number to match product data
+        const productId = parseInt(id, 10);
+        
+        // First try to get from local products data
+        const localProduct = getProductById(productId);
+        
+        if (localProduct) {
+          setProduct(localProduct);
+          if (localProduct.colors && localProduct.colors.length > 0) {
+            setSelectedColor(localProduct.colors[0]);
           }
-        } catch (apiError) {
-          // Fallback to local products if API fails
-          const localProducts = JSON.parse(localStorage.getItem('products') || '[]');
-          const foundProduct = localProducts.find(p => p.id === id || p._id === id);
-          if (foundProduct) {
-            setProduct(foundProduct);
-            if (foundProduct.colors && foundProduct.colors.length > 0) {
-              setSelectedColor(foundProduct.colors[0]);
+          if (localProduct.sizes && localProduct.sizes.length > 0) {
+            setSelectedSize(localProduct.sizes[0]);
+          }
+        } else {
+          // If not found in local data, try API
+          try {
+            const response = await apiClient.get(`/api/products/${productId}`);
+            if (response.data.success) {
+              setProduct(response.data.product);
+              if (response.data.product.colors && response.data.product.colors.length > 0) {
+                setSelectedColor(response.data.product.colors[0]);
+              }
+              if (response.data.product.sizes && response.data.product.sizes.length > 0) {
+                setSelectedSize(response.data.product.sizes[0]);
+              }
+            } else {
+              setError('Product not found');
             }
-            if (foundProduct.sizes && foundProduct.sizes.length > 0) {
-              setSelectedSize(foundProduct.sizes[0]);
-            }
-          } else {
+          } catch (apiError) {
             setError('Product not found');
           }
         }
@@ -86,14 +92,11 @@ const ProductDetailsPage = () => {
     
     const cartItem = {
       ...product,
-      selectedSize,
-      selectedColor,
-      quantity
+      size: selectedSize,
+      color: selectedColor,
     };
     
-    addToCart(cartItem);
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
+    addToCart(cartItem, quantity);
   };
 
   const isInWishlist = product && wishlistItems.some(item => item.id === product.id || item._id === product._id);
@@ -448,25 +451,6 @@ const ProductDetailsPage = () => {
                 </button>
               </div>
             </div>
-
-            {/* Success Message */}
-            <AnimatePresence>
-              {showSuccess && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className={`rounded-xl p-4 flex items-center space-x-3 ${
-                    isDarkMode ? 'bg-green-900/20 border border-green-500/50' : 'bg-green-50 border border-green-200'
-                  }`}
-                >
-                  <FaCheck className={`text-xl ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
-                  <span className={`font-medium ${isDarkMode ? 'text-green-300' : 'text-green-800'}`}>
-                    {translate('product.addedToCart', currentLanguage) || 'Added to cart successfully!'}
-                  </span>
-                </motion.div>
-              )}
-            </AnimatePresence>
 
             {/* Features */}
             <div className={`rounded-2xl shadow-lg p-6 ${

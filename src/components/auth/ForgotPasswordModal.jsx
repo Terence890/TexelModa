@@ -58,29 +58,65 @@ const ForgotPasswordModal = ({ isOpen, onClose, onSwitchToLogin }) => {
   if (!isOpen) return null;
 
   return (
-    <AnimatePresence mode="wait">
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" key="forgot-password-modal">
-        {/* Backdrop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={handleClose}
-          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        />
+    <div 
+      className="fixed inset-0 z-[9999]"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
+        margin: 0,
+        padding: 0,
+        zIndex: 9999,
+        overflow: 'auto'
+      }}
+    >
+      {/* Backdrop */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={handleClose}
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%'
+        }}
+      />
 
+      {/* Centering Wrapper - SAME AS LOGIN/REGISTER */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '90%',
+          maxWidth: '28rem',
+          zIndex: 10000
+        }}
+      >
         {/* Modal */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.2, ease: 'easeOut' }}
           onClick={(e) => e.stopPropagation()}
-          className={`relative w-full max-w-md rounded-2xl shadow-2xl ${
+          className={`rounded-2xl shadow-2xl w-full ${
             isDarkMode
               ? 'bg-gray-800/95 backdrop-blur-md border border-gray-700'
               : 'bg-white/95 backdrop-blur-md border border-gray-200'
           }`}
+          style={{
+            textAlign: 'left'
+          }}
         >
           {/* Close Button */}
           <button
@@ -116,10 +152,10 @@ const ForgotPasswordModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                 className="mb-4 p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
               >
                 <div className="flex items-center">
-                  <FaCheckCircle className="text-green-500 mr-2" />
+                  <FaCheckCircle className="text-green-500 mr-2 flex-shrink-0" />
                   <p className="text-sm text-green-600 dark:text-green-400">
                     {translate('auth.forgotPassword.success', currentLanguage) ||
-                      'If an account exists with this email, a password reset link has been sent.'}
+                      'Password reset link sent! Please check your email.'}
                   </p>
                 </div>
               </motion.div>
@@ -159,6 +195,7 @@ const ForgotPasswordModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                       {...register('email')}
                       type="email"
                       id="email"
+                      autoComplete="email"
                       className={`w-full pl-10 pr-4 py-3 rounded-lg border transition-colors ${
                         errors.email
                           ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
@@ -223,7 +260,7 @@ const ForgotPasswordModal = ({ isOpen, onClose, onSwitchToLogin }) => {
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+    </div>
   );
 };
 
