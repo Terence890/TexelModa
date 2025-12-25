@@ -564,30 +564,35 @@ const TryOnForm = ({ selectedClothing }) => {
               </div>
             </div>
             <div className="flex justify-center space-x-5 mt-8">
-              <button 
-                onClick={handleSaveImage}
-                className="btn btn-primary px-5 py-3 flex items-center shadow-md hover:shadow-lg transition-all dark:text-white"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                Save Image
-              </button>
-              <button className="btn btn-secondary px-5 py-3 flex items-center shadow-md hover:shadow-lg transition-all dark:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                Add to Cart
-              </button>
-              <button 
-                onClick={() => setResult(null)}
-                className="btn btn-outline px-5 py-3 flex items-center shadow-md hover:shadow-lg transition-all dark:text-white"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                Try Another
-              </button>
+              {/* Responsive action buttons: stacked on mobile, inline on sm+ */}
+              <div className="w-full flex flex-col sm:flex-row items-center sm:justify-center gap-3 sm:gap-5 mt-0">
+                <button 
+                  onClick={handleSaveImage}
+                  className="btn btn-primary w-full sm:w-auto px-5 py-3 flex items-center justify-center shadow-md hover:shadow-lg transition-all dark:text-white"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Save Image
+                </button>
+
+                <button className="btn btn-secondary w-full sm:w-auto px-5 py-3 flex items-center justify-center shadow-md hover:shadow-lg transition-all dark:text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  Add to Cart
+                </button>
+
+                <button 
+                  onClick={() => setResult(null)}
+                  className="btn btn-outline w-full sm:w-auto px-5 py-3 flex items-center justify-center shadow-md hover:shadow-lg transition-all dark:text-white"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Try Another
+                </button>
+              </div>
             </div>
           </div>
         </motion.div>
@@ -596,4 +601,4 @@ const TryOnForm = ({ selectedClothing }) => {
   );
 };
 
-export default TryOnForm; 
+export default TryOnForm;
