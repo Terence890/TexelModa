@@ -33,10 +33,31 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: '20
 
 // Security middleware
 app.use(helmet());
+
+// CORS: allow configured client origin, fallback to Netlify origin if not set.
+const ALLOWED_ORIGIN = process.env.CLIENT_URL || 'https://texelmoda.netlify.app';
+
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (e.g., curl, mobile apps)
+    if (!origin) return callback(null, true);
+
+    // Allow exact match with configured origin or fallback origin
+    if (origin === ALLOWED_ORIGIN) return callback(null, true);
+
+    // During development allow localhost origins
+    if (process.env.NODE_ENV !== 'production' && /localhost/.test(origin)) return callback(null, true);
+
+    // Otherwise block
+    return callback(new Error('CORS policy: This origin is not allowed'));
+  },
   credentials: true,
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization','X-Requested-With']
 }));
+
+// Ensure preflight requests are handled for the allowed origin
+app.options('*', cors({ origin: ALLOWED_ORIGIN, credentials: true }));
 
 // Rate limiting
 const limiter = rateLimit({

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { generateTryOn, getRandomSeed } from '../../api/tryOn';
+import { useCart } from '../../context/CartContext';
 
 const TryOnForm = ({ selectedClothing }) => {
+  const { addToCart } = useCart();
   const [avatarImage, setAvatarImage] = useState(null);
   const [clothingImage, setClothingImage] = useState(null);
   const [backgroundImage, setBackgroundImage] = useState(null);
@@ -183,6 +185,33 @@ const TryOnForm = ({ selectedClothing }) => {
       setSeed(lastSeed);
       setUseSeed(true);
       handleSubmit(new Event('submit'));
+    }
+  };
+
+  // Add the generated try-on image to cart
+  const handleAddResultToCart = () => {
+    if (!result) return;
+
+    // Build a simple product object for the try-on result.
+    const id = (selectedClothing && typeof selectedClothing === 'object' && selectedClothing.id)
+      ? selectedClothing.id
+      : `tryon-${Date.now()}`;
+
+    const name = (selectedClothing && typeof selectedClothing === 'object' && selectedClothing.name)
+      ? selectedClothing.name
+      : (clothingPrompt || 'Custom Try-On Item');
+
+    const product = {
+      id,
+      name,
+      image: result,
+      price: 0,
+    };
+
+    try {
+      addToCart(product);
+    } catch (err) {
+      // silent fail — cart handles errors internally
     }
   };
 
@@ -576,7 +605,10 @@ const TryOnForm = ({ selectedClothing }) => {
                   Save Image
                 </button>
 
-                <button className="btn btn-secondary w-full sm:w-auto px-5 py-3 flex items-center justify-center shadow-md hover:shadow-lg transition-all dark:text-white">
+                <button 
+                  onClick={handleAddResultToCart}
+                  className="btn btn-secondary w-full sm:w-auto px-5 py-3 flex items-center justify-center shadow-md hover:shadow-lg transition-all dark:text-white"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
