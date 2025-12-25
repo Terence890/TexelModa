@@ -3,8 +3,6 @@ import { motion } from 'framer-motion';
 import { FaBox, FaUndo, FaStar, FaUser } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import ShoppingCart from '../components/ecommerce/ShoppingCart';
-import Wishlist from '../components/ecommerce/Wishlist';
 import OrderTracking from '../components/ecommerce/OrderTracking';
 import ReturnManagement from '../components/ecommerce/ReturnManagement';
 import LoyaltyProgram from '../components/ecommerce/LoyaltyProgram';
@@ -95,21 +93,7 @@ const AccountPage = () => {
                 })}
               </nav>
 
-              {/* Quick Actions */}
-              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className={`rounded-xl p-3 text-center ${
-                    isDarkMode ? 'bg-gray-700/50' : 'bg-gray-50'
-                  }`}>
-                    <ShoppingCart />
-                  </div>
-                  <div className={`rounded-xl p-3 text-center ${
-                    isDarkMode ? 'bg-gray-700/50' : 'bg-gray-50'
-                  }`}>
-                    <Wishlist />
-                  </div>
-                </div>
-              </div>
+              {/* Quick Actions removed */}
             </motion.div>
           </div>
 

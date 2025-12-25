@@ -20,7 +20,6 @@ export const CartProvider = ({ children }) => {
     // Check version and clear old cart if needed
     const savedVersion = localStorage.getItem('cartVersion');
     if (savedVersion !== CART_VERSION) {
-      console.log('Cart version mismatch, clearing old cart');
       localStorage.removeItem('cart');
       localStorage.setItem('cartVersion', CART_VERSION);
       return [];
@@ -29,7 +28,6 @@ export const CartProvider = ({ children }) => {
     // Load cart items from localStorage on initial render
     const savedCart = localStorage.getItem('cart');
     const items = savedCart ? JSON.parse(savedCart) : [];
-    console.log('Loaded cart items from localStorage:', items);
     return items;
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -69,7 +67,7 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem('cart', JSON.stringify(apiItems));
       }
     } catch (error) {
-      console.error('Error loading cart from API:', error);
+      // Error handled silently
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +103,6 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem('cart', JSON.stringify(apiItems));
       }
     } catch (error) {
-      console.error('Error syncing cart:', error);
       loadCartFromAPI();
     } finally {
       setIsSyncing(false);
@@ -115,7 +112,6 @@ export const CartProvider = ({ children }) => {
   const addToCart = async (product, quantity = 1) => {
     // Ensure product has all required fields
     if (!product || !product.id) {
-      console.error('Invalid product:', product);
       return;
     }
 
@@ -155,7 +151,6 @@ export const CartProvider = ({ children }) => {
 
       // Save to localStorage immediately
       localStorage.setItem('cart', JSON.stringify(newItems));
-      console.log('Cart updated:', newItems);
 
       // Sync with API if authenticated
       if (isAuthenticated) {
@@ -171,14 +166,10 @@ export const CartProvider = ({ children }) => {
 
         if (existingItem) {
           // Update existing item
-          cartAPI.updateItem(product.id, itemToSync.quantity, itemSize, itemColor).catch(err => {
-            console.error('Error updating item in API:', err);
-          });
+          cartAPI.updateItem(product.id, itemToSync.quantity, itemSize, itemColor).catch(() => {});
         } else {
           // Add new item
-          cartAPI.addItem(itemToSync).catch(err => {
-            console.error('Error adding item to API:', err);
-          });
+          cartAPI.addItem(itemToSync).catch(() => {});
         }
       }
 
@@ -196,13 +187,10 @@ export const CartProvider = ({ children }) => {
       
       // Save to localStorage
       localStorage.setItem('cart', JSON.stringify(newItems));
-      console.log('Item removed, cart:', newItems);
 
       // Remove from API if authenticated
       if (isAuthenticated) {
-        cartAPI.removeItem(productId, size, color).catch(err => {
-          console.error('Error removing item from API:', err);
-        });
+        cartAPI.removeItem(productId, size, color).catch(() => {});
       }
 
       return newItems;
@@ -224,13 +212,10 @@ export const CartProvider = ({ children }) => {
       
       // Save to localStorage
       localStorage.setItem('cart', JSON.stringify(newItems));
-      console.log('Quantity updated, cart:', newItems);
 
       // Update in API if authenticated
       if (isAuthenticated) {
-        cartAPI.updateItem(productId, quantity, size, color).catch(err => {
-          console.error('Error updating quantity in API:', err);
-        });
+        cartAPI.updateItem(productId, quantity, size, color).catch(() => {});
       }
 
       return newItems;
@@ -240,13 +225,10 @@ export const CartProvider = ({ children }) => {
   const clearCart = async () => {
     setCartItems([]);
     localStorage.removeItem('cart');
-    console.log('Cart cleared');
 
     // Clear API cart if authenticated
     if (isAuthenticated) {
-      cartAPI.clearCart().catch(err => {
-        console.error('Error clearing cart in API:', err);
-      });
+      cartAPI.clearCart().catch(() => {});
     }
   };
 

@@ -71,26 +71,6 @@ const Footer = () => {
             <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-sm text-left">
               {translate('footer.description', currentLanguage) || 'Experience the future of fashion with AI-powered virtual try-on technology. Shop confidently and discover your perfect style.'}
             </p>
-            
-            {/* Contact Info */}
-            <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-              <div className="flex items-center space-x-2">
-                <FaEnvelope className="w-4 h-4 text-primary-light dark:text-primary-dark flex-shrink-0" />
-                <a href="mailto:info@texelmoda.com" className="hover:text-primary-light dark:hover:text-primary-dark transition-colors">
-                  info@texelmoda.com
-                </a>
-              </div>
-              <div className="flex items-center space-x-2">
-                <FaPhone className="w-4 h-4 text-primary-light dark:text-primary-dark flex-shrink-0" />
-                <a href="tel:+1234567890" className="hover:text-primary-light dark:hover:text-primary-dark transition-colors">
-                  +1 (234) 567-890
-                </a>
-              </div>
-              <div className="flex items-center space-x-2">
-                <FaMapMarkerAlt className="w-4 h-4 text-primary-light dark:text-primary-dark flex-shrink-0" />
-                <span>123 Fashion Street, NY 10001</span>
-              </div>
-            </div>
           </div>
 
           {/* Company Links */}
