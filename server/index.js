@@ -35,7 +35,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: '20
 app.use(helmet());
 
 // CORS: allow configured client origin, fallback to Netlify origin if not set.
-const ALLOWED_ORIGIN = process.env.CLIENT_URL || 'https://texelmoda.netlify.app';
+const ALLOWED_ORIGIN = process.env.CLIENT_URL ;
 
 app.use(cors({
   origin: function (origin, callback) {

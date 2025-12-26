@@ -39,6 +39,7 @@
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.0",
     "react-tsparticles": "^2.12.2",
+    "strip": "^3.0.0",
     "stripe": "^12.13.0",
     "tsparticles": "^3.8.1",
     "zod": "^4.2.1"
