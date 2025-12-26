@@ -3,6 +3,7 @@ import {
   getProfile,
   updateProfile,
   uploadAvatar,
+  uploadAvatarBase64,
   getAddresses,
   addAddress,
   updateAddress,
@@ -20,6 +21,7 @@ router.use(protect);
 router.get('/profile', getProfile);
 router.put('/profile', updateProfile);
 router.post('/avatar', uploadAvatarMiddleware, uploadAvatar);
+router.post('/avatar/base64', uploadAvatarBase64);
 
 // Address routes
 router.get('/addresses', getAddresses);

@@ -29,6 +29,13 @@ export const uploadAvatar = async (file) => {
 };
 
 /**
+ * Upload avatar as base64/data URL string
+ */
+export const uploadAvatarBase64 = async (avatarDataUrl) => {
+  return await apiClient.post('/users/avatar/base64', { avatar: avatarDataUrl });
+};
+
+/**
  * Get user addresses
  */
 export const getAddresses = async () => {

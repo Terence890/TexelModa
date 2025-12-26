@@ -137,6 +137,39 @@ export const uploadAvatar = async (req, res) => {
 };
 
 /**
+ * Upload avatar as base64 string
+ */
+export const uploadAvatarBase64 = async (req, res) => {
+  try {
+    const { avatar } = req.body;
+
+    if (!avatar || typeof avatar !== 'string') {
+      return res.status(400).json({ success: false, message: 'No avatar provided' });
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // If previous avatar was a stored file URL, delete it
+    if (user.avatar && user.avatar.includes('/uploads/')) {
+      const oldFilename = path.basename(user.avatar);
+      deleteFile(oldFilename);
+    }
+
+    // Store base64/data URL directly in DB
+    user.avatar = avatar;
+    await user.save();
+
+    res.json({ success: true, message: 'Avatar uploaded successfully', data: { avatar: user.avatar } });
+  } catch (error) {
+    console.error('Upload avatar (base64) error:', error);
+    res.status(500).json({ success: false, message: 'Error uploading avatar', error: error.message });
+  }
+};
+
+/**
  * Get user addresses
  */
 export const getAddresses = async (req, res) => {
