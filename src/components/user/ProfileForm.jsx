@@ -7,7 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
 import { translate } from '../../utils/translate';
-import { updateProfile, uploadAvatar } from '../../api/users';
+import { updateProfile, uploadAvatar, uploadAvatarBase64 } from '../../api/users';
 import { FaUser, FaEnvelope, FaPhone, FaVenusMars, FaCamera, FaCheckCircle } from 'react-icons/fa';
 
 const profileSchema = z.object({
@@ -70,18 +70,35 @@ const ProfileForm = ({ onSuccess }) => {
     setIsUploading(true);
     setError('');
 
+    // Convert file to base64/data URL and upload via JSON endpoint
     try {
-      const response = await uploadAvatar(file);
-      if (response.data.success) {
-        setAvatarPreview(response.data.data.avatar);
-        updateUser({ ...user, avatar: response.data.data.avatar });
-        setSuccess(true);
-        setTimeout(() => setSuccess(false), 3000);
-      }
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const dataUrl = reader.result;
+        try {
+          const response = await uploadAvatarBase64(dataUrl);
+          if (response.data.success) {
+            setAvatarPreview(response.data.data.avatar);
+            updateUser({ ...user, avatar: response.data.data.avatar });
+            setSuccess(true);
+            setTimeout(() => setSuccess(false), 3000);
+          } else {
+            setError(response.data.message || 'Failed to upload avatar');
+          }
+        } catch (err) {
+          setError(err.response?.data?.message || 'Failed to upload avatar');
+        } finally {
+          setIsUploading(false);
+        }
+      };
+      reader.onerror = () => {
+        setIsUploading(false);
+        setError('Failed to read the image file.');
+      };
+      reader.readAsDataURL(file);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to upload avatar');
-    } finally {
       setIsUploading(false);
+      setError('Failed to process the image file.');
     }
   };
 
