@@ -72,26 +72,20 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       const response = await authAPI.register(userData);
-      if (response.data.success) {
-        const { user, token, refreshToken } = response.data.data;
-        
-        // Store tokens
-        localStorage.setItem('token', token);
-        localStorage.setItem('refreshToken', refreshToken);
-        localStorage.setItem('user', JSON.stringify(user));
-        
-        // Update state
-        setUser(user);
-        setIsAuthenticated(true);
-        
-        return { success: true, user, message: response.data.message };
+      // If registration succeeded, persist tokens and user
+      if (response?.data?.success) {
+        const { user, token, refreshToken } = response.data.data || {};
+        if (token) localStorage.setItem('token', token);
+        if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+        if (user) localStorage.setItem('user', JSON.stringify(user));
+        if (user) setUser(user);
+        if (response.data.success) setIsAuthenticated(true);
       }
-      return { success: false, message: response.data.message };
+      // Return the full server response data so callers can read message, field, etc.
+      return response.data;
     } catch (error) {
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Registration failed. Please try again.',
-      };
+      // Return server error body if present, otherwise a generic object
+      return error.response?.data || { success: false, message: error.message || 'Registration failed. Please try again.' };
     }
   };
 

@@ -6,9 +6,10 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useNotification } from '../../context/NotificationContext';
 import { translate } from '../../utils/translate';
-import { updateProfile, uploadAvatar, uploadAvatarBase64 } from '../../api/users';
-import { FaUser, FaEnvelope, FaPhone, FaVenusMars, FaCamera, FaCheckCircle } from 'react-icons/fa';
+import { updateProfile, uploadAvatarBase64 } from '../../api/users';
+import { FaUser, FaEnvelope, FaPhone, FaVenusMars, FaCamera } from 'react-icons/fa';
 
 const profileSchema = z.object({
   fullName: z.string().min(2, 'Name must be at least 2 characters'),
@@ -22,8 +23,7 @@ const ProfileForm = ({ onSuccess }) => {
   const { isDarkMode } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const notify = useNotification();
   const [avatarPreview, setAvatarPreview] = useState(user?.avatar || null);
 
   const {
@@ -57,18 +57,17 @@ const ProfileForm = ({ onSuccess }) => {
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      setError('Please select an image file');
+      notify.error('Please select an image file');
       return;
     }
 
     // Validate file size (5MB)
     if (file.size > 5 * 1024 * 1024) {
-      setError('Image size must be less than 5MB');
+      notify.error('Image size must be less than 5MB');
       return;
     }
 
     setIsUploading(true);
-    setError('');
 
     // Convert file to base64/data URL and upload via JSON endpoint
     try {
@@ -80,55 +79,48 @@ const ProfileForm = ({ onSuccess }) => {
           if (response.data.success) {
             setAvatarPreview(response.data.data.avatar);
             updateUser({ ...user, avatar: response.data.data.avatar });
-            setSuccess(true);
-            setTimeout(() => setSuccess(false), 3000);
+            notify.success('Avatar uploaded successfully');
           } else {
-            setError(response.data.message || 'Failed to upload avatar');
+            notify.error(response.data.message || 'Failed to upload avatar');
           }
         } catch (err) {
-          setError(err.response?.data?.message || 'Failed to upload avatar');
+          notify.error(err.response?.data?.message || 'Failed to upload avatar');
         } finally {
           setIsUploading(false);
         }
       };
       reader.onerror = () => {
         setIsUploading(false);
-        setError('Failed to read the image file.');
+        notify.error('Failed to read the image file.');
       };
       reader.readAsDataURL(file);
     } catch (err) {
       setIsUploading(false);
-      setError('Failed to process the image file.');
+      notify.error('Failed to process the image file.');
     }
   };
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-    setError('');
-    setSuccess(false);
 
     try {
       const response = await updateProfile(data);
       console.log('Update profile response:', response);
-      
       if (response?.data?.success) {
         const updatedUser = response.data.data?.user;
         if (updatedUser) {
           updateUser(updatedUser);
-          setSuccess(true);
-          setTimeout(() => {
-            setSuccess(false);
-            if (onSuccess) onSuccess();
-          }, 2000);
+          notify.success('Profile updated successfully');
+          if (onSuccess) onSuccess();
         } else {
-          setError('Invalid response from server');
+          notify.error('Invalid response from server');
         }
       } else {
-        setError(response?.data?.message || 'Failed to update profile');
+        notify.error(response?.data?.message || 'Failed to update profile');
       }
     } catch (err) {
       console.error('Profile update error:', err);
-      setError(err.response?.data?.message || err.message || 'Failed to update profile');
+      notify.error(err.response?.data?.message || err.message || 'Failed to update profile');
     } finally {
       setIsLoading(false);
     }
@@ -136,30 +128,7 @@ const ProfileForm = ({ onSuccess }) => {
 
   return (
     <div className="space-y-6">
-      {/* Success Message */}
-      {success && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="p-4 rounded-xl bg-green-500/20 border border-green-500/50 flex items-center space-x-2"
-        >
-          <FaCheckCircle className="text-green-500 flex-shrink-0" />
-          <p className="text-sm text-green-600 dark:text-green-400">
-            {translate('profile.updateSuccess', currentLanguage) || 'Profile updated successfully!'}
-          </p>
-        </motion.div>
-      )}
-
-      {/* Error Message */}
-      {error && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="p-4 rounded-xl bg-red-500/20 border border-red-500/50"
-        >
-          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-        </motion.div>
-      )}
+      {/* Notifications are shown via global NotificationProvider */}
 
       {/* Avatar Upload */}
       <div>

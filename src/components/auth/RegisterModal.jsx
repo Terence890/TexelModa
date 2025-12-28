@@ -8,6 +8,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
 import { translate } from '../../utils/translate';
 import { FaTimes, FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useNotification } from '../../context/NotificationContext';
 
 const registerSchema = z
   .object({
@@ -33,8 +34,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+  const notify = useNotification();
 
   const {
     register,
@@ -47,8 +47,6 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-    setError('');
-    setSuccess(false);
 
     const result = await registerUser({
       fullName: data.fullName,
@@ -59,13 +57,13 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
     });
 
     if (result.success) {
-      setSuccess(true);
+      notify.success(result.message || 'Account created successfully.');
       setTimeout(() => {
         reset();
         onClose();
       }, 2000);
     } else {
-      setError(result.message || 'Registration failed. Please try again.');
+      notify.error(result.message || 'Registration failed. Please try again.');
     }
 
     setIsLoading(false);
@@ -73,8 +71,6 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
 
   const handleClose = () => {
     reset();
-    setError('');
-    setSuccess(false);
     onClose();
   };
 
@@ -165,31 +161,6 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                 {translate('auth.register.subtitle', currentLanguage) || 'Sign up to get started'}
               </p>
             </div>
-
-            {/* Success Message */}
-            {success && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-4 p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
-              >
-                <p className="text-sm text-green-600 dark:text-green-400">
-                  {translate('auth.register.success', currentLanguage) ||
-                    'Account created successfully! Please check your email to verify your account.'}
-                </p>
-              </motion.div>
-            )}
-
-            {/* Error Message */}
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-4 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
-              >
-                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-              </motion.div>
-            )}
 
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

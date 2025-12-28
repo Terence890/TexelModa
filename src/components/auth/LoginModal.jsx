@@ -8,6 +8,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
 import { translate } from '../../utils/translate';
 import { FaTimes, FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useNotification } from '../../context/NotificationContext';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -20,7 +21,7 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister, onSwitchToForgotPassw
   const { isDarkMode } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const notify = useNotification();
 
   const {
     register,
@@ -33,15 +34,17 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister, onSwitchToForgotPassw
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-    setError('');
 
-    const result = await login(data.email, data.password);
-
-    if (result.success) {
-      reset();
-      onClose();
-    } else {
-      setError(result.message || 'Login failed. Please try again.');
+    try {
+      const result = await login(data.email, data.password);
+      if (result?.success) {
+        reset();
+        onClose();
+      } else {
+        notify.error(result?.message || 'Login failed. Please try again.');
+      }
+    } catch (err) {
+      notify.error(err?.message || 'Login failed. Please try again.');
     }
 
     setIsLoading(false);
@@ -49,7 +52,6 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister, onSwitchToForgotPassw
 
   const handleClose = () => {
     reset();
-    setError('');
     onClose();
   };
 
@@ -141,16 +143,7 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister, onSwitchToForgotPassw
               </p>
             </div>
 
-            {/* Error Message */}
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-4 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
-              >
-                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-              </motion.div>
-            )}
+            {/* Notifications are shown via global NotificationProvider */}
 
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

@@ -7,7 +7,8 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
 import { translate } from '../../utils/translate';
 import { forgotPassword } from '../../api/auth';
-import { FaTimes, FaEnvelope, FaCheckCircle } from 'react-icons/fa';
+import { FaTimes, FaEnvelope } from 'react-icons/fa';
+import { useNotification } from '../../context/NotificationContext';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -17,8 +18,7 @@ const ForgotPasswordModal = ({ isOpen, onClose, onSwitchToLogin }) => {
   const { currentLanguage } = useLanguage();
   const { isDarkMode } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+  const notify = useNotification();
 
   const {
     register,
@@ -31,27 +31,24 @@ const ForgotPasswordModal = ({ isOpen, onClose, onSwitchToLogin }) => {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-    setError('');
-    setSuccess(false);
-
     try {
       const response = await forgotPassword(data.email);
-      if (response.data.success) {
-        setSuccess(true);
+      if (response?.data?.success) {
+        notify.success(response.data.message || "If an account exists with this email, a password reset link has been sent.");
+        reset();
+        onClose();
       } else {
-        setError(response.data.message || 'Failed to send reset email');
+        notify.error(response?.data?.message || 'Failed to send reset email');
       }
-    } catch (error) {
-      setError(error.response?.data?.message || 'Failed to send reset email. Please try again.');
+    } catch (err) {
+      notify.error(err.response?.data?.message || 'Failed to send reset email. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   const handleClose = () => {
     reset();
-    setError('');
-    setSuccess(false);
     onClose();
   };
 
@@ -144,36 +141,11 @@ const ForgotPasswordModal = ({ isOpen, onClose, onSwitchToLogin }) => {
               </p>
             </div>
 
-            {/* Success Message */}
-            {success && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-4 p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
-              >
-                <div className="flex items-center">
-                  <FaCheckCircle className="text-green-500 mr-2 flex-shrink-0" />
-                  <p className="text-sm text-green-600 dark:text-green-400">
-                    {translate('auth.forgotPassword.success', currentLanguage) ||
-                      'Password reset link sent! Please check your email.'}
-                  </p>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Error Message */}
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-4 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
-              >
-                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-              </motion.div>
-            )}
+            {/* Notifications are shown via global NotificationProvider */}
 
             {/* Form */}
-            {!success && (
+            {/* Always show form; success is delivered via toast */}
+            {(
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 {/* Email */}
                 <div>
