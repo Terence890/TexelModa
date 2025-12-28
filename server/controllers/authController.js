@@ -9,7 +9,11 @@ import { sendWelcomeEmail, sendPasswordResetEmail } from '../utils/email.js';
  */
 export const register = async (req, res) => {
   try {
+    console.log('REGISTER REQ BODY:', req.body);
     const { email, password, fullName, phone, gender } = req.body;
+
+    const normalizedEmail = (email || '').toLowerCase().trim();
+    console.log('NORMALIZED EMAIL:', normalizedEmail);
 
     // Validate required fields
     if (!email || !password || !fullName) {
@@ -29,7 +33,8 @@ export const register = async (req, res) => {
     }
 
     // Check if user already exists
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    const existingUser = await User.findOne({ email: normalizedEmail });
+    console.log('EXISTING USER FOUND:', !!existingUser, existingUser ? existingUser.email : null);
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -42,7 +47,7 @@ export const register = async (req, res) => {
 
     // Create user
     const user = await User.create({
-      email: email.toLowerCase(),
+      email: normalizedEmail,
       password,
       fullName,
       phone: phone || '',
