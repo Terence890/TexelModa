@@ -16,6 +16,8 @@ import orderRoutes from './routes/orders.js';
 dotenv.config();
 
 const app = express();
+// Trust the first proxy (Railway/load balancer) so req.ip and express-rate-limit work correctly
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 4242;
 
 // Connect to MongoDB (don't block server startup if DB fails in dev)
