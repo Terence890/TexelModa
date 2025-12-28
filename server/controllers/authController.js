@@ -9,11 +9,7 @@ import { sendWelcomeEmail, sendPasswordResetEmail } from '../utils/email.js';
  */
 export const register = async (req, res) => {
   try {
-    console.log('REGISTER REQ BODY:', req.body);
     const { email, password, fullName, phone, gender } = req.body;
-
-    const normalizedEmail = (email || '').toLowerCase().trim();
-    console.log('NORMALIZED EMAIL:', normalizedEmail);
 
     // Validate required fields
     if (!email || !password || !fullName) {
@@ -33,8 +29,7 @@ export const register = async (req, res) => {
     }
 
     // Check if user already exists
-    const existingUser = await User.findOne({ email: normalizedEmail });
-    console.log('EXISTING USER FOUND:', !!existingUser, existingUser ? existingUser.email : null);
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -47,7 +42,7 @@ export const register = async (req, res) => {
 
     // Create user
     const user = await User.create({
-      email: normalizedEmail,
+      email: email.toLowerCase(),
       password,
       fullName,
       phone: phone || '',
@@ -79,7 +74,10 @@ export const register = async (req, res) => {
       },
     });
   } catch (error) {
-    // Check if it's a database connection error
+    // Log the full error for debugging
+    console.error('Register error:', error);
+
+    // Database connection error
     if (mongoose.connection.readyState !== 1) {
       return res.status(503).json({
         success: false,
@@ -87,8 +85,8 @@ export const register = async (req, res) => {
         error: 'Database not connected',
       });
     }
-    
-    // Check if it's a validation error
+
+    // Validation error
     if (error.name === 'ValidationError') {
       const errors = Object.values(error.errors).map(err => err.message);
       return res.status(400).json({
@@ -97,17 +95,22 @@ export const register = async (req, res) => {
         errors,
       });
     }
-    
-    // Check if it's a duplicate key error
+
+    // Duplicate key error (e.g., unique index conflict)
     if (error.code === 11000) {
-      return res.status(400).json({
+      console.error('Duplicate key error on register:', error.keyValue || error);
+      const key = error.keyValue ? Object.keys(error.keyValue)[0] : 'unknown_field';
+      const value = error.keyValue ? error.keyValue[key] : undefined;
+      return res.status(409).json({
         success: false,
-        message: 'User already exists with this email',
+        message: 'Duplicate key error',
+        field: key,
+        value,
       });
     }
-    
+
     // Generic error
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Error registering user',
       error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error',
