@@ -1,3 +1,4 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/b48fdf73-b131-4bf7-855c-28d94cda1c19/deploy-status)](https://app.netlify.com/projects/texelmoda/deploys)
 [![Deploy Vite App to GitHub Pages](https://github.com/Terence890/TexelModa/actions/workflows/webpack.yml/badge.svg)](https://github.com/Terence890/TexelModa/actions/workflows/webpack.yml)
 [![DeepScan grade](https://deepscan.io/api/teams/28841/projects/30922/branches/997405/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=28841&pid=30922&bid=997405)
 
