@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import { convert } from 'html-to-text';
 
 dotenv.config();
 
@@ -34,7 +35,7 @@ export const sendEmail = async ({ to, subject, html, text }) => {
       to,
       subject,
       html,
-      text: text || html.replace(/<[^>]*>/g, ''), // Strip HTML for text version
+      text: text || convert(String(html || '')), // Convert HTML to plain text safely
     };
 
     const info = await transporter.sendMail(mailOptions);
