@@ -333,7 +333,16 @@ export const verifyEmail = async (req, res) => {
   try {
     const { token } = req.query;
 
-    const user = await User.findOne({ emailVerificationToken: token });
+    if (typeof token !== 'string' || !token.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid verification token',
+      });
+    }
+
+    const user = await User.findOne({
+      emailVerificationToken: { $eq: token },
+    });
 
     if (!user) {
       return res.status(400).json({
