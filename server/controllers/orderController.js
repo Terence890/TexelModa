@@ -111,7 +111,14 @@ export const getOrders = async (req, res) => {
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
     const query = { userId: req.user.id };
-    if (status) {
+    const allowedStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+    if (typeof status !== 'undefined') {
+      if (typeof status !== 'string' || !allowedStatuses.includes(status)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid status filter',
+        });
+      }
       query.status = status;
     }
 
