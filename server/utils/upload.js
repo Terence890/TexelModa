@@ -48,8 +48,20 @@ export const getFileUrl = (filename) => {
 
 // Delete file
 export const deleteFile = (filename) => {
-  if (!filename) return;
-  const filePath = path.join(uploadsDir, filename);
+  if (!filename || typeof filename !== 'string') return;
+
+  // Enforce simple filename only (no directory components)
+  const safeFilename = path.basename(filename);
+  if (safeFilename !== filename) return;
+
+  // Allow only expected avatar filename format produced by multer storage
+  if (!/^avatar-\d+-\d+\.[a-zA-Z0-9]+$/.test(safeFilename)) return;
+
+  // Resolve and ensure the target stays within uploadsDir
+  const filePath = path.resolve(uploadsDir, safeFilename);
+  const rootPath = path.resolve(uploadsDir) + path.sep;
+  if (!filePath.startsWith(rootPath)) return;
+
   if (fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
   }
