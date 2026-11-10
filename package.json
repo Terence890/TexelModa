@@ -28,7 +28,7 @@
     "framer-motion": "^12.12.1",
     "gsap": "^3.13.0",
     "helmet": "^8.1.0",
-    "joi": "^18.2.9",
+    "joi": "^18.3.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.7.2",
     "multer": "^2.5.0",
